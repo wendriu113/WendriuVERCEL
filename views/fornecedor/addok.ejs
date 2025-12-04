@@ -1,0 +1,47 @@
+<%-include('../cabecalho.ejs')%>
+<section class="section">
+  <div class="content">
+    <h2>Fornecedor Adicionado com Sucesso!</h2>
+
+    <div class="card" style="margin: 20px 0">
+      <h3>Dados do Fornecedor:</h3>
+      <p><strong>Nome:</strong> <%= fornecedor.nome %></p>
+      <p><strong>CNPJ:</strong> <%= fornecedor.cnpj %></p>
+      <p><strong>Endereço:</strong> <%= fornecedor.endereco %></p>
+      <p><strong>Telefone:</strong> <%= fornecedor.telefone %></p>
+      <p><strong>Email:</strong> <%= fornecedor.email %></p>
+    </div>
+
+    <div class="actions">
+      <a href="/fornecedor/lst" class="btn primary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          width="20"
+          height="20"
+        >
+          <path
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          />
+        </svg>
+        Ver Lista de Fornecedores
+      </a>
+      <a href="/fornecedor/add" class="btn primary">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          width="20"
+          height="20"
+        >
+          <path
+            d="M12 5a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H6a1 1 0 110-2h5V6a1 1 0 011-1z"
+          />
+        </svg>
+        Adicionar Outro Fornecedor
+      </a>
+    </div>
+  </div>
+</section>
+<%-include('../rodape.ejs')%>

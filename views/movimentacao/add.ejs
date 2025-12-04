@@ -1,0 +1,187 @@
+<%-include('../cabecalho.ejs')%>
+
+
+<section class="section">
+  <div class="content">
+    <header>
+      <h3>Nova Movimentação de Estoque</h3>
+    </header>
+
+
+    <form id="form-movimentacao" action="/movimentacao/add/ok" method="POST">
+      <div class="grid">
+        <div>
+          <label for="id">ID da movimentação</label>
+          <input id="id" name="id" type="text" required
+                 value="<%= formData?.id || '' %>"
+                 placeholder="ID da movimentação ">
+        </div>
+        <div>
+          <label for="data">Data da Movimentação</label>
+          <input id="data" name="data" type="date"
+                 value="<%= formData?.data || '' %>">
+        </div>
+        <div>
+          <label for="tipo">Tipo de Movimentação</label>
+          <select id="tipo" name="tipo" required>
+            <option value="">Selecione o tipo</option>
+            <option value="entrada" <%= formData?.tipo === 'entrada' ? 'selected' : '' %>>Entrada</option>
+            <option value="saida" <%= formData?.tipo === 'saida' ? 'selected' : '' %>>Saída</option>
+          </select>
+        </div>
+ 
+        <div>
+          <label for="produto">Produto</label>
+          <select id="produto" name="produto" required>
+            <option value="">Selecione o produto</option>
+            <% produtos.forEach(function(p) { %>
+              <option value="<%= p._id %>" 
+                <%= (formData?.produto == p._id) ? 'selected' : '' %>>
+                <%= p.nome %> (Estoque: <%= p.quantidade %>)
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div>
+          <label for="quantidade">Quantidade</label>
+          <input id="quantidade" name="quantidade" type="number" min="1" required
+                 value="<%= formData?.quantidade || '' %>">
+        </div>
+
+        <div>
+          <label for="fornecedorDestino">Fornecedor</label>
+          <select id="fornecedorDestino" name="fornecedorDestino" required>
+            <option value="">Selecione um fornecedor</option>
+            <% fornecedores.forEach(function(f) { %>
+              <option value="<%= f._id %>" <%= (formData?.fornecedorDestino == f._id) ? 'selected' : '' %> >
+                <%= f.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div>
+          <label for="usuario">Usuário Responsável</label>
+          <select id="usuario" name="usuario" required>
+            <option value="">Selecione um usuário</option>
+            <% usuarios.forEach(function(u) { %>
+              <option value="<%= u._id %>" <%= (formData?.usuario == u._id) ? 'selected' : '' %> >
+                <%= u.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="full">
+          <label for="observacao">Observação</label>
+          <input id="observacao" name="observacao" type="text"
+                 value="<%= formData?.observacao || '' %>">
+        </div>
+
+        <footer>
+          <button type="submit">Registrar Movimentação</button>
+          <a href="/movimentacao/lst">Cancelar</a>
+        </footer>
+      </div>
+    </form>
+
+    <% if (typeof showAlert !== 'undefined' && showAlert && alertMessage) { %>
+      <script>
+        alert("<%= alertMessage %>");
+      </script>
+    <% } %>
+  </div>
+</section>
+<%-include('../rodape.ejs')%>
+
+<style>
+  /* Padronização dos inputs (já existente) */
+  .grid input[type="datetime-local"],
+  .grid #data {
+    width: 100%;
+    padding: 10px 12px;
+    height: 42px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #f8fafc;
+    font-size: 1rem;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    box-sizing: border-box;
+  }
+  .grid input[type="datetime-local"]:focus,
+  .grid #data:focus {
+    outline: none;
+    border-color: #040505;
+    box-shadow: 0 0 0 3px rgba(10, 11, 12, 0.08);
+    background: #fff;
+  }
+
+  /* Botões footer: registrar (primário) e cancelar (secundário) */
+  .grid footer {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .grid footer button,
+  .grid footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 150px;
+    height: 42px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s, border-color .15s, transform .06s;
+    cursor: pointer;
+  }
+
+  /* Botão primário (Registrar) - tom mais escuro */
+  .grid footer button {
+    background: #010101; /* tom escuro */
+    color: #fff;
+    border: 1px solid #123a8a;
+  }
+  .grid footer button:hover {
+    background: #0f2f6f;
+    transform: translateY(-1px);
+  }
+
+  /* Botão secundário (Cancelar) - fundo transparente, borda leve */
+  .grid footer a {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #e6e8ef;
+  }
+  .grid footer a:hover {
+    background: #f5f7fb;
+    border-color: #cfd6ea;
+    transform: translateY(-1px);
+  }
+
+  /* Ícone nos botões (se usar SVG) */
+  .grid footer button svg,
+  .grid footer a svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  /* Responsivo */
+  @media (max-width: 560px) {
+    .grid footer {
+      flex-direction: column;
+    }
+    .grid footer button,
+    .grid footer a {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+</style>

@@ -1,0 +1,115 @@
+<%-include('../cabecalho.ejs')%>
+
+<style>
+  .grid footer {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .grid footer button,
+  .grid footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+    height: 42px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .grid footer button {
+    background: #0c0d0d;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .grid footer button:hover {
+    background: #0b0b0b;
+    transform: translateY(-1px);
+  }
+
+  .grid footer a {
+    color: #666;
+    background: transparent;
+    border: 1px solid #e2e8f0;
+  }
+
+  .grid footer a:hover {
+    background: #f5f5f5;
+    border-color: #cbd5e0;
+    transform: translateY(-1px);
+  }
+</style>
+
+<section class="section">
+  <div class="content">
+    <header>
+      <h3>Editar Movimentação</h3>
+    </header>
+
+    <form id="form-movimentacao" action="/movimentacao/edit/<%= formData._id %>" method="POST">
+      <div class="grid">
+        <div>
+          <label for="tipo">Tipo</label>
+          <select id="tipo" name="tipo" required>
+            <option value="entrada" <%= formData.tipo === 'entrada' ? 'selected' : '' %>>Entrada</option>
+            <option value="saida" <%= formData.tipo === 'saida' ? 'selected' : '' %>>Saída</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="produto">Produto</label>
+          <select id="produto" name="produto" required>
+            <option value="">Selecione um produto</option>
+            <% produtos.forEach(function(p) { %>
+              <option value="<%= p._id %>" 
+                <%= (formData.produto && formData.produto._id && 
+                     p._id && p._id.toString() === formData.produto._id.toString()) ? 'selected' : '' %>>
+                <%= p.nome %> (Estoque: <%= p.quantidade || 0 %>)
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div>
+          <label for="quantidade">Quantidade</label>
+          <input id="quantidade" name="quantidade" type="number" required value="<%= formData.quantidade %>">
+        </div>
+
+        <div>
+          <label for="usuario">Usuário Responsável</label>
+          <select id="usuario" name="usuario" required>
+            <option value="">Selecione um usuário</option>
+            <% usuarios.forEach(function(u) { %>
+              <option value="<%= u._id %>" 
+                <%= (formData.usuario && formData.usuario._id && 
+                     u._id && u._id.toString() === formData.usuario._id.toString()) ? 'selected' : '' %>>
+                <%= u.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div class="full">
+          <label for="observacao">Observação</label>
+          <input id="observacao" name="observacao" type="text" value="<%= formData.observacao || '' %>">
+        </div>
+
+        <footer>
+          <button type="submit">Salvar Alterações</button>
+          <a href="/movimentacao/lst">Cancelar</a>
+        </footer>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%-include('../rodape.ejs')%>

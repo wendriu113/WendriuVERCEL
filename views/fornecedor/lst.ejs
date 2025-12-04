@@ -1,0 +1,146 @@
+<%-include('../cabecalho.ejs')%>
+
+<script>
+  function formatarCNPJ(cnpj) {
+    if (!cnpj) return "-";
+    return cnpj.replace(
+      /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+      "$1.$2.$3/$4-$5"
+    );
+  }
+</script>
+
+<style>
+  .actions-cell {
+    width: 100px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin: 0 4px;
+  }
+  .icon-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  .icon-btn.edit {
+    color: #000 !important;
+  }
+  .icon-btn.edit:hover {
+    background: #e6e6e6;
+    transform: translateY(-1px);
+    color: #000 !important;
+  }
+
+  .icon-btn.delete {
+    color: #4b5563;
+  }
+  .icon-btn.delete:hover {
+    background: #feecec;
+    color: #dc2626;
+    transform: translateY(-1px);
+  }
+</style>
+
+<section class="section">
+  <div
+    style="
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    "
+  >
+    <div>
+      <h2>Fornecedores</h2>
+      <p>Lista de fornecedores</p>
+    </div>
+    <div class="actions">
+      <a href="/fornecedor/add" class="btn primary">Adicionar Fornecedor</a>
+    </div>
+  </div>
+
+  <div class="table-wrap" style="margin-top: 14px">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CNPJ</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th class="actions-cell">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (fornecedores && fornecedores.length) { %> <%
+        fornecedores.forEach(function(f) { %>
+        <tr>
+          <td><%= f.nome %></td>
+          <td>
+            <script>
+              document.write(formatarCNPJ("<%= f.cnpj %>"));
+            </script>
+          </td>
+          <td><%= f.telefone || '-' %></td>
+          <td><%= f.email || '-' %></td>
+          <td class="actions-cell">
+            <a
+              href="/fornecedor/edit/<%= f._id %>"
+              class="icon-btn edit"
+              title="Editar"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"
+                />
+              </svg>
+            </a>
+            <form
+              action="/fornecedor/delete/<%= f._id %>"
+              method="post"
+              style="display: inline"
+            >
+              <button
+                type="submit"
+                class="icon-btn delete"
+                title="Excluir"
+                onclick="return confirm('Deseja excluir este fornecedor?')"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M3 6h18" />
+                  <path
+                    d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"
+                  />
+                </svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }); %> <% } else { %>
+        <tr>
+          <td colspan="5" style="text-align: center">
+            Nenhum fornecedor encontrado.
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%-include('../rodape.ejs')%>

@@ -1,0 +1,29 @@
+<%-include('../cabecalho.ejs')%>
+<section class="section">
+  <div class="content">
+    <h2>Movimentação Registrada com Sucesso!</h2>
+
+    <div class="card" style="margin: 20px 0">
+      <h3>Detalhes da Movimentação:</h3>
+      <p>
+        <strong>Tipo:</strong> <%= movimentacao.tipo === 'entrada' ? 'Entrada' :
+        'Saída' %>
+      </p>
+      <p><strong>Produto:</strong> <%= movimentacao.produto.nome %></p>
+      <p><strong>Quantidade:</strong> <%= movimentacao.quantidade %></p>
+      <p>
+        <strong>Data:</strong> <%=
+        movimentacao.createdAt.toLocaleString('pt-BR') %>
+      </p>
+      <% if (movimentacao.observacao) { %>
+      <p><strong>Observação:</strong> <%= movimentacao.observacao %></p>
+      <% } %>
+    </div>
+
+    <div class="actions">
+      <a href="/movimentacao/lst" class="btn primary">Ver Movimentações</a>
+      <a href="/movimentacao/add" class="btn primary">Nova Movimentação</a>
+    </div>
+  </div>
+</section>
+<%-include('../rodape.ejs')%>

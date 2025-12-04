@@ -1,0 +1,138 @@
+<%-include('../cabecalho.ejs')%>
+
+<style>
+  .actions-cell {
+    width: 100px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin: 0 4px;
+  }
+  .icon-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+
+  .icon-btn.edit {
+    color: #000 !important;
+  }
+  .icon-btn.edit:hover {
+    background: #e6e6e6;
+    transform: translateY(-1px);
+    color: #000 !important;
+  }
+
+  .icon-btn.delete {
+    color: #4b5563;
+  }
+  .icon-btn.delete:hover {
+    background: #feecec;
+    color: #dc2626;
+    transform: translateY(-1px);
+  }
+</style>
+
+<section class="section">
+  <div
+    style="
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    "
+  >
+    <div>
+      <h2>Movimentações</h2>
+      <p>Histórico de movimentações de estoque</p>
+    </div>
+    <div class="actions">
+      <a href="/movimentacao/add" class="btn primary">Nova Movimentação</a>
+    </div>
+  </div>
+
+  <div class="table-wrap" style="margin-top: 14px">
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Tipo</th>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Usuário</th>
+          <th>Observação</th>
+          <th class="actions-cell">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (movimentacoes && movimentacoes.length) { %> <%
+        movimentacoes.forEach(function(m) { %>
+        <tr>
+          <td>
+            <%= m.data ? new Date(m.data).toLocaleDateString('pt-BR') : '-' %>
+          </td>
+          <td><%= m.tipo === 'entrada' ? 'Entrada' : 'Saída' %></td>
+          <td><%= m.produto?.nome || '-' %></td>
+          <td><%= m.quantidade %></td>
+          <td><%= m.usuario?.nome || 'Usuário não encontrado' %></td>
+          <td><%= m.observacao || '-' %></td>
+          <td class="actions-cell">
+            <a
+              href="/movimentacao/edit/<%= m._id %>"
+              class="icon-btn edit"
+              title="Editar"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"
+                />
+              </svg>
+            </a>
+            <form
+              action="/movimentacao/delete/<%= m._id %>"
+              method="post"
+              style="display: inline"
+            >
+              <button
+                type="submit"
+                class="icon-btn delete"
+                title="Excluir"
+                onclick="return confirm('Deseja excluir esta movimentação?')"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M3 6h18" />
+                  <path
+                    d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"
+                  />
+                </svg>
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% }); %> <% } else { %>
+        <tr>
+          <td colspan="7" style="text-align: center">
+            Nenhuma movimentação encontrada.
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%-include('../rodape.ejs')%>

@@ -1,0 +1,16 @@
+<%-include('../cabecalho.ejs')%>
+<section class="section">
+  <div class="content">
+    <h2>Usuário Adicionado com Sucesso!</h2>
+    <div class="card" style="margin:20px 0;">
+      <p><strong>Nome:</strong> <%= usuario.nome %></p>
+      <p><strong>Email:</strong> <%= usuario.email %></p>
+      <p><strong>Perfil:</strong> <%= usuario.perfil %></p>
+    </div>
+    <div class="actions">
+      <a href="/usuario/lst" class="btn primary">Ver Lista de Usuários</a>
+      <a href="/usuario/add" class="btn">Adicionar Outro Usuário</a>
+    </div>
+  </div>
+</section>
+<%-include('../rodape.ejs')%>

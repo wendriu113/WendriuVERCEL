@@ -1,0 +1,262 @@
+/* Reset e configurações gerais */
+* {
+  box-sizing: border-box;
+}
+
+/* Container principal */
+.section {
+  padding: 20px;
+}
+
+.content {
+  max-width: 820px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Cabeçalho */
+.section header h3 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin: 0 0 24px 0;
+}
+
+/* Grid do formulário */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Campos do formulário */
+.grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Labels */
+.grid label {
+  font-size: 0.95rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+/* Inputs e Selects */
+.grid input,
+.grid input[type="text"],
+.grid input[type="email"],
+.grid input[type="tel"],
+.grid input[type="password"],
+.grid input[type="cnpj"],
+.grid input[type="number"],
+.grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: all 0.2s;
+  height: 42px;
+}
+
+/* Estado de foco */
+.grid input:focus,
+.grid select:focus {
+  outline: none;
+  border-color: #2d8cff;
+  box-shadow: 0 0 0 3px rgba(45, 140, 255, 0.1);
+  background: #fff;
+}
+
+/* Placeholders */
+.grid input::placeholder {
+  color: #a0aec0;
+}
+
+/* Campos formatados */
+.grid input[data-mask="cnpj"],
+.grid input[data-mask="phone"],
+.grid input[type="tel"] {
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+.grid input[name="endereco"] {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Placeholder específicos */
+.grid input[data-mask="cnpj"]::placeholder {
+  color: #a0aec0;
+  letter-spacing: normal;
+}
+
+.grid input[data-mask="phone"]::placeholder {
+  color: #a0aec0;
+  letter-spacing: normal;
+}
+
+/* Footer com botões */
+.grid footer {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Botões */
+.grid footer button,
+.grid footer a {
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.grid footer button {
+  background: #2d8cff;
+  color: white;
+  border: none;
+}
+
+.grid footer button:hover {
+  background: #2678db;
+}
+
+.grid footer a {
+  color: #666;
+  background: transparent;
+  border: 1px solid #ddd;
+}
+
+.grid footer a:hover {
+  background: #f5f5f5;
+}
+
+/* Mensagens de erro */
+.error {
+  color: #e53e3e;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  .content {
+    padding: 16px;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* Estilos para todos os inputs */
+.grid input,
+.grid input[type="text"],
+.grid input[type="email"],
+.grid input[type="tel"],
+.grid input[type="number"],
+.grid input[data-mask="cnpj"],
+.grid input[data-mask="phone"],
+.grid select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: all 0.2s;
+  height: 42px;
+}
+
+/* Estado de foco para todos os inputs */
+.grid input:focus,
+.grid input[data-mask="cnpj"]:focus,
+.grid input[data-mask="phone"]:focus,
+.grid select:focus {
+  outline: none;
+  border-color: #2d8cff;
+  box-shadow: 0 0 0 3px rgba(45, 140, 255, 0.1);
+  background: #fff;
+}
+
+/* Estilo específico para inputs com máscara */
+.grid input[data-mask="cnpj"],
+.grid input[data-mask="phone"] {
+  font-family: "Consolas", monospace;
+  letter-spacing: 0.5px;
+  font-size: 0.95rem;
+}
+
+/* Placeholder para inputs com máscara */
+.grid input[data-mask="cnpj"]::placeholder,
+.grid input[data-mask="phone"]::placeholder {
+  font-family: system-ui, -apple-system, sans-serif;
+  letter-spacing: normal;
+  color: #a0aec0;
+}
+
+/* Input de endereço (full width) */
+.grid div.full input {
+  width: 100%;
+}
+
+/* Estilos para ações nas tabelas */
+.actions-cell {
+  width: 100px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.icon-btn.edit {
+  color: #000; /* cor preta */
+}
+
+.icon-btn.edit:hover {
+  color: #000;
+  background: #e6e6e6; /* leve fundo no hover */
+  transform: translateY(-1px);
+}
+
+.icon-btn.delete {
+  color: #4b5563;
+}
+
+.icon-btn.delete:hover {
+  color: #dc2626;
+  background: #fee2e2;
+}

@@ -1,0 +1,117 @@
+<%-include('../cabecalho.ejs')%>
+
+<style>
+  /* Botões: Salvar (primário escuro) e Cancelar (transparente) */
+  .grid footer {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .grid footer button,
+  .grid footer a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 140px;
+    height: 42px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .15s, transform .06s;
+    cursor: pointer;
+  }
+
+  /* Botão primário (Salvar) - tom mais escuro */
+  .grid footer button {
+    background: #08080a;
+    color: #fff;
+    border: 1px solid #123a8a;
+  }
+  .grid footer button:hover {
+    background: #0f2f6f;
+    transform: translateY(-1px);
+  }
+
+  /* Botão secundário (Cancelar) - fundo transparente */
+  .grid footer a {
+    background: transparent;
+    color: #374151;
+    border: 1px solid #e6e8ef;
+  }
+  .grid footer a:hover {
+    background: #f5f7fb;
+    border-color: #cfd6ea;
+    transform: translateY(-1px);
+  }
+
+  /* Responsivo */
+  @media (max-width: 560px) {
+    .grid footer { flex-direction: column; }
+    .grid footer button, .grid footer a { width: 100%; min-width: 0; }
+  }
+</style>
+
+<section class="section">
+  <header>
+    <h3>Adicionar Novo Produto</h3>
+  </header>
+  <div class="content">
+    <form id="form-produto" autocomplete="off" action="/produto/add/ok" method="POST">
+      <div class="grid">
+        <div>
+          <label for="nome">Nome do Produto</label>
+          <input id="nome" name="nome" type="text" required
+                 value="<%= formData?.nome || '' %>"
+                 placeholder="Nome do produto">
+                 
+        </div>
+        <div>
+          <label for="preco">Preço (R$)</label>
+          <input id="preco" name="preco" type="number" step="0.01" min="0" required
+                 value="<%= formData?.preco || '' %>"
+                 placeholder="0.00">
+        </div>
+        <div>
+          <label for="quantidade">Quantidade</label>
+          <input id="quantidade" name="quantidade" type="number" min="0" required
+                 value="<%= formData?.quantidade || '' %>"
+                 placeholder="0">
+        </div>
+        <div>
+          <label for="fornecedor">Fornecedor</label>
+          <select id="fornecedor" name="fornecedor" required>
+            <option value="">Selecione um fornecedor</option>
+            <% fornecedores.forEach(function(f) { %>
+              <option value="<%= f._id %>" 
+                <%= (formData?.fornecedor == f._id) ? 'selected' : '' %>>
+                <%= f.nome %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div>
+          <label for="descricao">Descrição</label>
+          <input id="descricao" name="descricao" type="text"
+                 value="<%= formData?.descricao || '' %>"
+                 placeholder="Descrição do produto (opcional)">
+        </div>
+        <footer>
+          <button type="submit">Salvar</button>
+          <a href="/produto/lst">Cancelar</a>
+        </footer>
+      </div>
+    </form>
+
+    <% if (typeof showAlert !== 'undefined' && showAlert && alertMessage) { %>
+      <script>
+        alert("<%= alertMessage %>");
+      </script>
+    <% } %>
+  </div>
+</section>
+<%-include('../rodape.ejs')%>
