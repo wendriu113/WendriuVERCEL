@@ -1,0 +1,48 @@
+<%- include('header.ejs') %>
+
+<section class="section products-container">
+  <header>
+    <h2 class="products-title">Fornecedores</h2>
+  </header>
+
+  <% if (!fornecedores || fornecedores.length === 0) { %>
+  <p>Nenhum fornecedor encontrado.</p>
+  <% } else { %>
+  <div class="products-grid">
+    <% fornecedores.forEach(function(f) { %>
+    <div class="product-card">
+      <div class="product-image-container">
+        <% if (f.imagem) { %>
+        <img
+          src="<%= f.imagem %>"
+          alt="<%= f.nome %>"
+          class="product-image"
+          onerror="this.onerror=null;this.src='/images/placeholder.svg'"
+        />
+        <% } else { %>
+        <div style="font-size: 28px">🏢</div>
+        <% } %>
+      </div>
+      <div class="product-content">
+        <h3 class="product-name"><%= f.nome %></h3>
+        <p class="product-description">
+          <strong>Endereço:</strong> <%= f.endereco %>
+        </p>
+        <div class="product-details">
+          <div class="product-detail-row">
+            <div class="product-detail-label">Telefone</div>
+            <div class="product-detail-value"><%= f.telefone %></div>
+          </div>
+          <div class="product-detail-row">
+            <div class="product-detail-label">Email</div>
+            <div class="product-detail-value"><%= f.email %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</section>
+
+<%- include('footer.ejs') %>

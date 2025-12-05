@@ -89,6 +89,10 @@
             <% }); %>
           </select>
         </div>
+        <div>
+          <label for="imagem">URL da Imagem (opcional)</label>
+          <input id="imagem" name="imagem" type="text" value="<%= formData.imagem || '' %>">
+        </div>
 
         <footer>
           <button type="submit">Salvar Alterações</button>

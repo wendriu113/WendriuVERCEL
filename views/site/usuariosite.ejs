@@ -1,0 +1,44 @@
+<%- include('header.ejs') %>
+
+<section class="section products-container">
+  <header>
+    <h2 class="products-title">Usuários</h2>
+  </header>
+
+  <% if (!usuarios || usuarios.length === 0) { %>
+  <p>Nenhum usuário encontrado.</p>
+  <% } else { %>
+  <div class="products-grid">
+    <% usuarios.forEach(function(u) { %>
+    <div class="product-card">
+      <div class="product-image-container">
+        <% if (u.imagem) { %>
+        <img
+          src="<%= u.imagem %>"
+          alt="<%= u.nome %>"
+          class="product-image"
+          onerror="this.onerror=null;this.src='/images/placeholder.svg'"
+        />
+        <% } else { %>
+        <div style="font-size: 28px">👤</div>
+        <% } %>
+      </div>
+      <div class="product-content">
+        <h3 class="product-name"><%= u.nome %></h3>
+        <p class="product-description">
+          <strong>Perfil:</strong> <%= u.perfil %>
+        </p>
+        <div class="product-details">
+          <div class="product-detail-row">
+            <div class="product-detail-label">Email</div>
+            <div class="product-detail-value"><%= u.email %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</section>
+
+<%- include('footer.ejs') %>

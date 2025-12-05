@@ -97,6 +97,11 @@
           </select>
         </div>
 
+        <div>
+          <label for="imagem">Imagem (URL)</label>
+          <input id="imagem" name="imagem" type="url" placeholder="https://exemplo.com/avatar.png" value="<%= formData?.imagem || '' %>">
+        </div>
+
         <footer>
           <button type="submit">Adicionar Usuário</button>
           <a href="/usuarioadm/lst">Cancelar</a>

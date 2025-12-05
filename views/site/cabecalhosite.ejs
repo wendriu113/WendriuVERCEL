@@ -1,0 +1,53 @@
+<header class="dashboard-header">
+  <div class="dashboard-header-content">
+    <div class="dashboard-logo">
+      <div class="dashboard-logo-icon">
+        <i
+          data-lucide="package"
+          class="dashboard-logo-icon-svg"
+          aria-hidden="true"
+        ></i>
+      </div>
+      <h1 class="dashboard-title">Sistema de Gerenciamento</h1>
+    </div>
+
+    <button
+      onclick="location.href='/'"
+      class="dashboard-back-button"
+      aria-label="Voltar"
+    >
+      <i data-lucide="home" class="w-5 h-5" aria-hidden="true"></i>
+      <span>Voltar</span>
+    </button>
+  </div>
+</header>
+
+<nav class="dashboard-nav">
+  <div class="dashboard-nav-content">
+    <div class="dashboard-nav-tabs">
+      <a href="/produtosite" class="dashboard-nav-tab">
+        <i data-lucide="package" aria-hidden="true"></i>
+        <span>Produtos</span>
+      </a>
+      <a href="/fornecedoradm/lst" class="dashboard-nav-tab">
+        <i data-lucide="truck" aria-hidden="true"></i>
+        <span>Fornecedores</span>
+      </a>
+      <a href="/movimentacaoadm/lst" class="dashboard-nav-tab">
+        <i data-lucide="activity" aria-hidden="true"></i>
+        <span>Movimentação</span>
+      </a>
+      <a href="/usuarioadm/lst" class="dashboard-nav-tab">
+        <i data-lucide="users" aria-hidden="true"></i>
+        <span>Usuários</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // inicializa ícones Lucide se disponível
+  if (typeof lucide !== "undefined" && lucide.createIcons) {
+    lucide.createIcons();
+  }
+</script>

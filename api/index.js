@@ -36,8 +36,99 @@ app.use(express.static(join(__dirname, "../public")));
 
 //rotas
 app.get("/", (req, res) => {
-  res.render("site/site");
+  // Passar ícones simples para o template (pode trocar por SVG/HTML se preferir)
+  const packageIcon = "📦";
+  const arrowIcon = "➡️";
+  res.render("site/site", { packageIcon, arrowIcon });
 });
+
+// Página pública de produtos (site)
+app.get("/site/produtosite", async (req, res) => {
+  try {
+    const produtos = await Produto.find()
+      .populate("fornecedor")
+      .sort({ nome: 1 })
+      .lean();
+    res.render("site/produtosite", { produtos });
+  } catch (err) {
+    console.error("Erro ao carregar produtos do site:", err);
+    res.status(500).render("site/produtosite", {
+      produtos: [],
+      showAlert: true,
+      alertMessage: "Erro ao carregar produtos: " + err.message,
+    });
+  }
+});
+
+// Rota compatibilidade: /produtosite -> /site/produtosite
+app.get("/produtosite", (req, res) => {
+  return res.redirect(301, "/site/produtosite");
+});
+
+// Página pública de fornecedores (site)
+app.get("/site/fornecedorsite", async (req, res) => {
+  try {
+    const fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
+    res.render("site/fornecedorsite", { fornecedores });
+  } catch (err) {
+    console.error("Erro ao carregar fornecedores do site:", err);
+    res.status(500).render("site/fornecedorsite", {
+      fornecedores: [],
+      showAlert: true,
+      alertMessage: "Erro ao carregar fornecedores: " + err.message,
+    });
+  }
+});
+
+// Compatibilidade /fornecedorsite -> /site/fornecedorsite
+app.get("/fornecedorsite", (req, res) =>
+  res.redirect(301, "/site/fornecedorsite")
+);
+
+// Página pública de movimentações (site)
+app.get("/site/movimentacaosite", async (req, res) => {
+  try {
+    const movimentacoes = await Movimentacao.find()
+      .populate("produto")
+      .populate("usuario")
+      .sort({ data: -1 })
+      .lean();
+    res.render("site/movimentacaosite", { movimentacoes });
+  } catch (err) {
+    console.error("Erro ao carregar movimentações do site:", err);
+    res.status(500).render("site/movimentacaosite", {
+      movimentacoes: [],
+      showAlert: true,
+      alertMessage: "Erro ao carregar movimentações: " + err.message,
+    });
+  }
+});
+
+// Compatibilidade /movimentacaosite -> /site/movimentacaosite
+app.get("/movimentacaosite", (req, res) =>
+  res.redirect(301, "/site/movimentacaosite")
+);
+
+// Página pública de usuários (site)
+app.get("/site/usuariosite", async (req, res) => {
+  try {
+    const usuarios = await Usuario.find()
+      .select("-senha")
+      .sort({ nome: 1 })
+      .lean();
+    res.render("site/usuariosite", { usuarios });
+  } catch (err) {
+    console.error("Erro ao carregar usuários do site:", err);
+    res.status(500).render("site/usuariosite", {
+      usuarios: [],
+      showAlert: true,
+      alertMessage: "Erro ao carregar usuários: " + err.message,
+    });
+  }
+});
+
+// Compatibilidade /usuariosite -> /site/usuariosite
+app.get("/usuariosite", (req, res) => res.redirect(301, "/site/usuariosite"));
 
 // Rotas Produto
 app.get("/produtoadm/lst", async (req, res) => {
@@ -92,6 +183,7 @@ app.post("/produtoadm/add/ok", async (req, res) => {
     const produto = await Produto.create({
       nome: req.body.nome,
       descricao: req.body.descricao || "",
+      imagem: req.body.imagem || "",
       preco: Number(req.body.preco),
       quantidade: Number(req.body.quantidade),
       fornecedor: req.body.fornecedor,
@@ -154,6 +246,7 @@ app.post("/produtoadm/edit/:id", async (req, res) => {
     await Produto.findByIdAndUpdate(req.params.id, {
       nome: req.body.nome,
       descricao: req.body.descricao,
+      imagem: req.body.imagem || "",
       preco: Number(req.body.preco),
       quantidade: Number(req.body.quantidade),
       fornecedor: req.body.fornecedor,
@@ -390,6 +483,7 @@ app.post("/usuarioadm/add/ok", async (req, res) => {
       email: req.body.email,
       senha: req.body.senha,
       perfil: req.body.perfil || "usuario",
+      imagem: req.body.imagem || undefined,
     });
 
     const usuarioSemSenha = { ...usuario.toObject(), senha: undefined };
@@ -443,6 +537,7 @@ app.post("/usuarioadm/edit/:id", async (req, res) => {
     usuario.nome = req.body.nome;
     usuario.email = req.body.email;
     usuario.perfil = req.body.perfil;
+    usuario.imagem = req.body.imagem || undefined;
 
     // Só atualiza a senha se foi fornecida uma nova
     if (req.body.senha && req.body.senha.trim() !== "") {
@@ -488,6 +583,7 @@ app.post("/fornecedoradm/add/ok", async (req, res) => {
       endereco: req.body.endereco,
       telefone: req.body.telefone.replace(/\D/g, ""),
       email: req.body.email,
+      imagem: req.body.imagem || undefined,
     });
 
     res.render("fornecedoradm/addok", { fornecedor });
@@ -547,6 +643,7 @@ app.post("/fornecedoradm/edit/:id", async (req, res) => {
       telefone: req.body.telefone.replace(/\D/g, ""),
       email: req.body.email,
       endereco: req.body.endereco,
+      imagem: req.body.imagem || undefined,
     });
 
     res.redirect("/fornecedoradm/lst");

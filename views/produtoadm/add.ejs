@@ -100,6 +100,12 @@
                  value="<%= formData?.descricao || '' %>"
                  placeholder="Descrição do produto (opcional)">
         </div>
+        <div>
+          <label for="imagem">URL da Imagem (opcional)</label>
+          <input id="imagem" name="imagem" type="text"
+                 value="<%= formData?.imagem || '' %>"
+                 placeholder="https://...">
+        </div>
         <footer>
           <button type="submit">Salvar</button>
           <a href="/produtoadm/lst">Cancelar</a>

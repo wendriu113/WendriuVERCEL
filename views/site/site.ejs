@@ -1,1 +1,74 @@
-<h1> FREEFIRE</h1>
+<!doctype html>
+<html
+  lang="pt-br"
+  class="<%= (typeof theme !== 'undefined' && theme === 'dark') ? 'dark' : '' %>"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind (se existir no projeto) -->
+    <link rel="stylesheet" href="/css/tailwind.css" />
+
+    <!-- Arquivo de variáveis globais (carrega depois para sobrescrever se necessário) -->
+    <link rel="stylesheet" href="/css/globais.css" />
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <title>Sistema de Gerenciamento</title>
+
+    <!-- Inline landing CSS (embedded because /css/globais.css wasn't loading) -->
+   
+  </head>
+
+  <body class="bg-background text-foreground">
+    <div class="landing-container">
+      <div class="landing-content">
+        <div class="landing-icon-container">
+          <div class="landing-icon-wrapper">
+            <i data-lucide="package" class="w-16 h-16 text-white"></i>
+          </div>
+        </div>
+
+        <h1 class="landing-title">Sistema de Gerenciamento</h1>
+
+        <p class="landing-description">
+          Controle completo de produtos, fornecedores, estoque e usuários em um
+          só lugar. Simples, eficiente e intuitivo.
+        </p>
+
+        <a href="/produtosite" class="landing-button">
+          <span class="text-lg">Acessar Sistema</span>
+          <i data-lucide="arrow-right" class="w-5 h-5" aria-hidden="true"></i>
+        </a>
+
+        <div class="landing-features">
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">📦</div>
+            <div class="landing-feature-title">Produtos</div>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">🏢</div>
+            <div class="landing-feature-title">Fornecedores</div>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">📊</div>
+            <div class="landing-feature-title">Estoque</div>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">👥</div>
+            <div class="landing-feature-title">Usuários</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

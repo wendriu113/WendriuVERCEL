@@ -162,6 +162,33 @@
           />
         </div>
 
+        <div>
+          <label for="imagem">Imagem (URL)</label>
+          <input
+            id="imagem"
+            name="imagem"
+            type="url"
+            placeholder="https://exemplo.com/logo.png"
+            value="<%= formData?.imagem || '' %>"
+          />
+          <% if (formData && formData.imagem) { %>
+          <div style="margin-top: 8px">
+            <img
+              src="<%= formData.imagem %>"
+              alt="Imagem fornecedor"
+              style="
+                max-height: 80px;
+                max-width: 160px;
+                object-fit: cover;
+                border-radius: 6px;
+                border: 1px solid #e2e8f0;
+              "
+              onerror="this.src='/images/placeholder.svg'"
+            />
+          </div>
+          <% } %>
+        </div>
+
         <div class="full">
           <label for="endereco">Endereço Completo</label>
           <input

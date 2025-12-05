@@ -5,6 +5,7 @@ const UsuarioSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   senha: { type: String, required: true },
   perfil: { type: String, enum: ["admin", "usuario"], default: "usuario" },
+  imagem: { type: String },
 });
 
 const Usuario = mongoose.model("Usuario", UsuarioSchema);

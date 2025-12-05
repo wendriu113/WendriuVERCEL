@@ -162,6 +162,17 @@
           />
         </div>
 
+        <div>
+          <label for="imagem">Imagem (URL)</label>
+          <input
+            id="imagem"
+            name="imagem"
+            type="url"
+            placeholder="https://exemplo.com/logo.png"
+            value="<%= formData?.imagem || '' %>"
+          />
+        </div>
+
         <div class="full">
           <label for="endereco">Endereço Completo</label>
           <input
