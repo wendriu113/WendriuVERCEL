@@ -23,20 +23,20 @@ app.use(express.static(join(__dirname, "../public")));
 
 //rotas
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("site/site");
 });
 
 // Rotas Produto
-app.get("/produto/lst", async (req, res) => {
+app.get("/produtoadm/lst", async (req, res) => {
   try {
     const produtos = await Produto.find()
       .populate("fornecedor")
       .sort({ nome: 1 })
       .lean();
-    res.render("produto/lst", { produtos });
+    res.render("produtoadm/lst", { produtos });
   } catch (err) {
     console.error("Erro ao listar produtos:", err);
-    res.render("produto/lst", {
+    res.render("produtoadm/lst", {
       produtos: [],
       error: "Erro ao listar produtos",
       showAlert: true,
@@ -45,17 +45,17 @@ app.get("/produto/lst", async (req, res) => {
   }
 });
 
-app.get("/produto/add", async (req, res) => {
+app.get("/produtoadm/add", async (req, res) => {
   try {
     const fornecedores = await Fornecedor.find().lean();
-    res.render("produto/add", {
+    res.render("produtoadm/add", {
       formData: {},
       fornecedores,
       error: null,
     });
   } catch (err) {
     console.error("Erro ao carregar formulário:", err);
-    res.render("produto/add", {
+    res.render("produtoadm/add", {
       formData: {},
       fornecedores: [],
       error: "Erro ao carregar fornecedores",
@@ -65,7 +65,7 @@ app.get("/produto/add", async (req, res) => {
   }
 });
 
-app.post("/produto/add/ok", async (req, res) => {
+app.post("/produtoadm/add/ok", async (req, res) => {
   try {
     if (
       !req.body.nome ||
@@ -85,14 +85,14 @@ app.post("/produto/add/ok", async (req, res) => {
     });
 
     const produtoPopulado = await produto.populate("fornecedor");
-    return res.render("produto/addok", { produto: produtoPopulado });
+    return res.render("produtoadm/addok", { produto: produtoPopulado });
   } catch (err) {
     console.error("Erro ao salvar produto:", err);
 
     // Recarrega fornecedores para o form
     const fornecedores = await Fornecedor.find().lean();
 
-    return res.status(400).render("produto/add", {
+    return res.status(400).render("produtoadm/add", {
       error: "Erro ao salvar produto",
       formData: req.body,
       fornecedores,
@@ -102,18 +102,18 @@ app.post("/produto/add/ok", async (req, res) => {
   }
 });
 
-app.post("/produto/delete/:id", async (req, res) => {
+app.post("/produtoadm/delete/:id", async (req, res) => {
   try {
     await Produto.findByIdAndDelete(req.params.id);
-    res.redirect("/produto/lst");
+    res.redirect("/produtoadm/lst");
   } catch (err) {
     console.error("Erro ao excluir produto:", err);
-    res.redirect("/produto/lst");
+    res.redirect("/produtoadm/lst");
   }
 });
 
 // Rota GET para editar produto
-app.get("/produto/edit/:id", async (req, res) => {
+app.get("/produtoadm/edit/:id", async (req, res) => {
   try {
     const produto = await Produto.findById(req.params.id)
       .populate("fornecedor")
@@ -124,19 +124,19 @@ app.get("/produto/edit/:id", async (req, res) => {
       throw new Error("Produto não encontrado");
     }
 
-    res.render("produto/edit", {
+    res.render("produtoadm/edit", {
       formData: produto,
       fornecedores,
       error: null,
     });
   } catch (err) {
     console.error("Erro ao carregar produto:", err);
-    res.redirect("/produto/lst");
+    res.redirect("/produtoadm/lst");
   }
 });
 
 // Rota POST para salvar edição do produto
-app.post("/produto/edit/:id", async (req, res) => {
+app.post("/produtoadm/edit/:id", async (req, res) => {
   try {
     await Produto.findByIdAndUpdate(req.params.id, {
       nome: req.body.nome,
@@ -146,11 +146,11 @@ app.post("/produto/edit/:id", async (req, res) => {
       fornecedor: req.body.fornecedor,
     });
 
-    res.redirect("/produto/lst");
+    res.redirect("/produtoadm/lst");
   } catch (err) {
     console.error("Erro ao atualizar produto:", err);
     const fornecedores = await Fornecedor.find().lean();
-    res.render("produto/edit", {
+    res.render("produtoadm/edit", {
       formData: req.body,
       fornecedores,
       error: "Erro ao atualizar produto",
@@ -161,7 +161,7 @@ app.post("/produto/edit/:id", async (req, res) => {
 });
 
 // Rotas Movimentação
-app.get("/movimentacao/lst", async (req, res) => {
+app.get("/movimentacaoadm/lst", async (req, res) => {
   try {
     const movimentacoes = await Movimentacao.find()
       .populate("produto")
@@ -169,10 +169,10 @@ app.get("/movimentacao/lst", async (req, res) => {
       .sort({ data: -1 })
       .lean();
 
-    res.render("movimentacao/lst", { movimentacoes });
+    res.render("movimentacaoadm/lst", { movimentacoes });
   } catch (err) {
     console.error("Erro ao listar movimentações:", err);
-    res.render("movimentacao/lst", {
+    res.render("movimentacaoadm/lst", {
       movimentacoes: [],
       error: "Erro ao listar movimentações",
     });
@@ -180,13 +180,13 @@ app.get("/movimentacao/lst", async (req, res) => {
 });
 
 // Rota GET para adicionar movimentação
-app.get("/movimentacao/add", async (req, res) => {
+app.get("/movimentacaoadm/add", async (req, res) => {
   try {
     const produtos = await Produto.find().lean();
     const fornecedores = await Fornecedor.find().lean();
     const usuarios = await Usuario.find().select("-senha").lean();
 
-    res.render("movimentacao/add", {
+    res.render("movimentacaoadm/add", {
       formData: {},
       produtos,
       fornecedores,
@@ -195,7 +195,7 @@ app.get("/movimentacao/add", async (req, res) => {
     });
   } catch (err) {
     console.error("Erro ao carregar formulário:", err);
-    res.render("movimentacao/add", {
+    res.render("movimentacaoadm/add", {
       formData: {},
       produtos: [],
       fornecedores: [],
@@ -206,7 +206,7 @@ app.get("/movimentacao/add", async (req, res) => {
 });
 
 // Rota POST para salvar movimentação
-app.post("/movimentacao/add/ok", async (req, res) => {
+app.post("/movimentacaoadm/add/ok", async (req, res) => {
   try {
     const movimentacao = new Movimentacao({
       ...req.body,
@@ -214,14 +214,14 @@ app.post("/movimentacao/add/ok", async (req, res) => {
     });
 
     await movimentacao.save();
-    res.redirect("/movimentacao/lst");
+    res.redirect("/movimentacaoadm/lst");
   } catch (err) {
     console.error("Erro ao salvar movimentação:", err);
     const produtos = await Produto.find().lean();
     const fornecedores = await Fornecedor.find().lean();
     const usuarios = await Usuario.find().select("-senha").lean(); // Adiciona busca de usuários
 
-    res.render("movimentacao/add", {
+    res.render("movimentacaoadm/add", {
       formData: req.body,
       produtos,
       fornecedores,
@@ -233,18 +233,18 @@ app.post("/movimentacao/add/ok", async (req, res) => {
   }
 });
 
-app.post("/movimentacao/delete/:id", async (req, res) => {
+app.post("/movimentacaoadm/delete/:id", async (req, res) => {
   try {
     await Movimentacao.findByIdAndDelete(req.params.id);
-    res.redirect("/movimentacao/lst");
+    res.redirect("/movimentacaoadm/lst");
   } catch (err) {
     console.error("Erro ao excluir movimentação:", err);
-    res.redirect("/movimentacao/lst");
+    res.redirect("/movimentacaoadm/lst");
   }
 });
 
 // Rota GET para editar movimentação
-app.get("/movimentacao/edit/:id", async (req, res) => {
+app.get("/movimentacaoadm/edit/:id", async (req, res) => {
   try {
     const movimentacao = await Movimentacao.findById(req.params.id)
       .populate("produto")
@@ -258,7 +258,7 @@ app.get("/movimentacao/edit/:id", async (req, res) => {
       throw new Error("Movimentação não encontrada");
     }
 
-    res.render("movimentacao/edit", {
+    res.render("movimentacaoadm/edit", {
       formData: movimentacao,
       produtos,
       usuarios, // Passa usuários para o template
@@ -266,12 +266,12 @@ app.get("/movimentacao/edit/:id", async (req, res) => {
     });
   } catch (err) {
     console.error("Erro ao carregar movimentação:", err);
-    res.redirect("/movimentacao/lst");
+    res.redirect("/movimentacaoadm/lst");
   }
 });
 
 // Rota POST para salvar edição da movimentação
-app.post("/movimentacao/edit/:id", async (req, res) => {
+app.post("/movimentacaoadm/edit/:id", async (req, res) => {
   try {
     const movimentacao = await Movimentacao.findById(req.params.id);
     if (!movimentacao) {
@@ -327,12 +327,12 @@ app.post("/movimentacao/edit/:id", async (req, res) => {
     movimentacao.observacao = req.body.observacao;
     await movimentacao.save();
 
-    res.redirect("/movimentacao/lst");
+    res.redirect("/movimentacaoadm/lst");
   } catch (err) {
     console.error("Erro ao atualizar movimentação:", err);
     const produtos = await Produto.find().lean();
     const usuarios = await Usuario.find().select("-senha").lean(); // Adiciona busca de usuários
-    res.render("movimentacao/edit", {
+    res.render("movimentacaoadm/edit", {
       formData: { ...req.body, _id: req.params.id },
       produtos,
       usuarios, // Passa usuários para o template
@@ -344,16 +344,16 @@ app.post("/movimentacao/edit/:id", async (req, res) => {
 });
 
 // Rotas Usuário
-app.get("/usuario/lst", async (req, res) => {
+app.get("/usuarioadm/lst", async (req, res) => {
   try {
     const usuarios = await Usuario.find()
       .select("-senha")
       .sort({ nome: 1 })
       .lean();
-    res.render("usuario/lst", { usuarios });
+    res.render("usuarioadm/lst", { usuarios });
   } catch (err) {
     console.error("Erro ao listar usuários:", err);
-    res.render("usuario/lst", {
+    res.render("usuarioadm/lst", {
       usuarios: [],
       error: "Erro ao listar usuários",
       showAlert: true,
@@ -362,11 +362,11 @@ app.get("/usuario/lst", async (req, res) => {
   }
 });
 
-app.get("/usuario/add", (req, res) => {
-  res.render("usuario/add", { formData: {}, error: null });
+app.get("/usuarioadm/add", (req, res) => {
+  res.render("usuarioadm/add", { formData: {}, error: null });
 });
 
-app.post("/usuario/add/ok", async (req, res) => {
+app.post("/usuarioadm/add/ok", async (req, res) => {
   try {
     if (!req.body.nome || !req.body.email || !req.body.senha) {
       throw new Error("Nome, email e senha são obrigatórios");
@@ -380,12 +380,12 @@ app.post("/usuario/add/ok", async (req, res) => {
     });
 
     const usuarioSemSenha = { ...usuario.toObject(), senha: undefined };
-    return res.render("usuario/addok", { usuario: usuarioSemSenha });
+    return res.render("usuarioadm/addok", { usuario: usuarioSemSenha });
   } catch (err) {
     console.error("Erro ao salvar usuário:", err);
     let message = "Erro ao salvar usuário";
     if (err.code === 11000) message = "Email já cadastrado";
-    return res.status(400).render("usuario/add", {
+    return res.status(400).render("usuarioadm/add", {
       error: message,
       formData: req.body,
       showAlert: true,
@@ -394,17 +394,17 @@ app.post("/usuario/add/ok", async (req, res) => {
   }
 });
 
-app.post("/usuario/delete/:id", async (req, res) => {
+app.post("/usuarioadm/delete/:id", async (req, res) => {
   try {
     await Usuario.findByIdAndDelete(req.params.id);
   } catch (err) {
     console.error("Erro ao excluir usuário:", err);
   }
-  return res.redirect("/usuario/lst");
+  return res.redirect("/usuarioadm/lst");
 });
 
 // Rota para form de edição
-app.get("/usuario/edit/:id", async (req, res) => {
+app.get("/usuarioadm/edit/:id", async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id)
       .select("-senha")
@@ -412,15 +412,15 @@ app.get("/usuario/edit/:id", async (req, res) => {
     if (!usuario) {
       throw new Error("Usuário não encontrado");
     }
-    res.render("usuario/edit", { formData: usuario, error: null });
+    res.render("usuarioadm/edit", { formData: usuario, error: null });
   } catch (err) {
     console.error("Erro ao carregar usuário:", err);
-    res.redirect("/usuario/lst");
+    res.redirect("/usuarioadm/lst");
   }
 });
 
 // Rota POST para salvar edição
-app.post("/usuario/edit/:id", async (req, res) => {
+app.post("/usuarioadm/edit/:id", async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
     if (!usuario) {
@@ -437,10 +437,10 @@ app.post("/usuario/edit/:id", async (req, res) => {
     }
 
     await usuario.save();
-    res.redirect("/usuario/lst");
+    res.redirect("/usuarioadm/lst");
   } catch (err) {
     console.error("Erro ao atualizar usuário:", err);
-    res.render("usuario/edit", {
+    res.render("usuarioadm/edit", {
       formData: { ...req.body, _id: req.params.id },
       error: "Erro ao atualizar usuário",
       showAlert: true,
@@ -450,24 +450,24 @@ app.post("/usuario/edit/:id", async (req, res) => {
 });
 
 // Rotas Fornecedor
-app.get("/fornecedor/lst", async (req, res) => {
+app.get("/fornecedoradm/lst", async (req, res) => {
   try {
     const fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
-    res.render("fornecedor/lst", { fornecedores });
+    res.render("fornecedoradm/lst", { fornecedores });
   } catch (err) {
     console.error("Erro ao listar fornecedores:", err);
-    res.render("fornecedor/lst", {
+    res.render("fornecedoradm/lst", {
       fornecedores: [],
       error: "Erro ao listar fornecedores",
     });
   }
 });
 
-app.get("/fornecedor/add", (req, res) => {
-  res.render("fornecedor/add", { formData: {}, error: null });
+app.get("/fornecedoradm/add", (req, res) => {
+  res.render("fornecedoradm/add", { formData: {}, error: null });
 });
 
-app.post("/fornecedor/add/ok", async (req, res) => {
+app.post("/fornecedoradm/add/ok", async (req, res) => {
   try {
     const fornecedor = await Fornecedor.create({
       nome: req.body.nome,
@@ -477,7 +477,7 @@ app.post("/fornecedor/add/ok", async (req, res) => {
       email: req.body.email,
     });
 
-    res.render("fornecedor/addok", { fornecedor });
+    res.render("fornecedoradm/addok", { fornecedor });
   } catch (err) {
     console.error("Erro ao salvar fornecedor:", err);
     let alertMessage = "Erro ao salvar fornecedor";
@@ -492,7 +492,7 @@ app.post("/fornecedor/add/ok", async (req, res) => {
           .join(", ");
     }
 
-    res.status(400).render("fornecedor/add", {
+    res.status(400).render("fornecedoradm/add", {
       error: alertMessage,
       formData: req.body,
       showAlert: true,
@@ -501,32 +501,32 @@ app.post("/fornecedor/add/ok", async (req, res) => {
   }
 });
 
-app.post("/fornecedor/delete/:id", async (req, res) => {
+app.post("/fornecedoradm/delete/:id", async (req, res) => {
   try {
     await Fornecedor.findByIdAndDelete(req.params.id);
-    res.redirect("/fornecedor/lst");
+    res.redirect("/fornecedoradm/lst");
   } catch (err) {
     console.error("Erro ao editar fornecedor:", err);
-    res.redirect("/fornecedor/lst");
+    res.redirect("/fornecedoradm/lst");
   }
 });
 
 // Rota GET para form de edição
-app.get("/fornecedor/edit/:id", async (req, res) => {
+app.get("/fornecedoradm/edit/:id", async (req, res) => {
   try {
     const fornecedor = await Fornecedor.findById(req.params.id).lean();
     if (!fornecedor) {
       throw new Error("Fornecedor não encontrado");
     }
-    res.render("fornecedor/edit", { formData: fornecedor, error: null });
+    res.render("fornecedoradm/edit", { formData: fornecedor, error: null });
   } catch (err) {
     console.error("Erro ao carregar fornecedor:", err);
-    res.redirect("/fornecedor/lst");
+    res.redirect("/fornecedoradm/lst");
   }
 });
 
 // Rota POST para salvar edição
-app.post("/fornecedor/edit/:id", async (req, res) => {
+app.post("/fornecedoradm/edit/:id", async (req, res) => {
   try {
     await Fornecedor.findByIdAndUpdate(req.params.id, {
       nome: req.body.nome,
@@ -536,10 +536,10 @@ app.post("/fornecedor/edit/:id", async (req, res) => {
       endereco: req.body.endereco,
     });
 
-    res.redirect("/fornecedor/lst");
+    res.redirect("/fornecedoradm/lst");
   } catch (err) {
     console.error("Erro ao atualizar fornecedor:", err);
-    res.render("fornecedor/edit", {
+    res.render("fornecedoradm/edit", {
       formData: req.body,
       error: "Erro ao atualizar fornecedor",
       showAlert: true,

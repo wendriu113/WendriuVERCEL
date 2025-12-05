@@ -1,5 +1,15 @@
 <%-include('../cabecalho.ejs')%>
 
+<script>
+  function formatarCNPJ(cnpj) {
+    if (!cnpj) return "-";
+    return cnpj.replace(
+      /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+      "$1.$2.$3/$4-$5"
+    );
+  }
+</script>
+
 <style>
   .actions-cell {
     width: 100px;
@@ -27,7 +37,6 @@
     stroke: currentColor;
   }
 
-  /* Edit: preto */
   .icon-btn.edit {
     color: #000 !important;
   }
@@ -37,7 +46,6 @@
     color: #000 !important;
   }
 
-  /* Delete: vermelho ao hover */
   .icon-btn.delete {
     color: #4b5563;
   }
@@ -59,11 +67,11 @@
     "
   >
     <div>
-      <h2>Produtos</h2>
-      <p>Lista de produtos</p>
+      <h2>Fornecedores</h2>
+      <p>Lista de fornecedores</p>
     </div>
     <div class="actions">
-      <a href="/produto/add" class="btn primary">Adicionar Produto</a>
+      <a href="/fornecedoradm/add" class="btn primary">Adicionar Fornecedor</a>
     </div>
   </div>
 
@@ -72,25 +80,27 @@
       <thead>
         <tr>
           <th>Nome</th>
-          <th>Descrição</th>
-          <th>Preço</th>
-          <th>Quantidade</th>
-          <th>Fornecedor</th>
+          <th>CNPJ</th>
+          <th>Telefone</th>
+          <th>Email</th>
           <th class="actions-cell">Ações</th>
         </tr>
       </thead>
       <tbody>
-        <% if (produtos && produtos.length) { %> <% produtos.forEach(function(p)
-        { %>
+        <% if (fornecedores && fornecedores.length) { %> <%
+        fornecedores.forEach(function(f) { %>
         <tr>
-          <td><%= p.nome %></td>
-          <td><%= p.descricao || '-' %></td>
-          <td>R$ <%= Number(p.preco || 0).toFixed(2) %></td>
-          <td><%= p.quantidade || 0 %></td>
-          <td><%= p.fornecedor?.nome || '-' %></td>
+          <td><%= f.nome %></td>
+          <td>
+            <script>
+              document.write(formatarCNPJ("<%= f.cnpj %>"));
+            </script>
+          </td>
+          <td><%= f.telefone || '-' %></td>
+          <td><%= f.email || '-' %></td>
           <td class="actions-cell">
             <a
-              href="/produto/edit/<%= p._id %>"
+              href="/fornecedoradm/edit/<%= f._id %>"
               class="icon-btn edit"
               title="Editar"
             >
@@ -101,7 +111,7 @@
               </svg>
             </a>
             <form
-              action="/produto/delete/<%= p._id %>"
+              action="/fornecedoradm/delete/<%= f._id %>"
               method="post"
               style="display: inline"
             >
@@ -109,7 +119,7 @@
                 type="submit"
                 class="icon-btn delete"
                 title="Excluir"
-                onclick="return confirm('Deseja excluir este produto?')"
+                onclick="return confirm('Deseja excluir este fornecedor?')"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path d="M3 6h18" />
@@ -123,8 +133,8 @@
         </tr>
         <% }); %> <% } else { %>
         <tr>
-          <td colspan="6" style="text-align: center">
-            Nenhum produto encontrado.
+          <td colspan="5" style="text-align: center">
+            Nenhum fornecedor encontrado.
           </td>
         </tr>
         <% } %>

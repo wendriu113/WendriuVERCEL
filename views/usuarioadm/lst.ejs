@@ -14,7 +14,7 @@
       <p>Gerenciamento de usuários</p>
     </div>
     <div class="actions">
-      <a href="/usuario/add" class="btn primary">
+      <a href="/usuarioadm/add" class="btn primary">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -50,7 +50,7 @@
           <td><%= u.perfil %></td>
           <td class="actions-cell">
             <a
-              href="/usuario/edit/<%= u._id %>"
+              href="/usuarioadm/edit/<%= u._id %>"
               class="icon-btn edit"
               title="Editar"
             >
@@ -72,7 +72,7 @@
               </svg>
             </a>
             <form
-              action="/usuario/delete/<%= u._id %>"
+              action="/usuarioadm/delete/<%= u._id %>"
               method="post"
               style="display: inline"
             >

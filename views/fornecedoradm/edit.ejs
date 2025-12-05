@@ -102,13 +102,13 @@
 <section class="section">
   <div class="content">
     <header>
-      <h3>Adicionar Novo Fornecedor</h3>
+      <h3>Atualizar Fornecedor</h3>
     </header>
 
     <form
       id="form-fornecedor"
       autocomplete="off"
-      action="/fornecedor/add/ok"
+      action="/fornecedoradm/edit/<%= formData._id %>"
       method="POST"
     >
       <div class="grid">
@@ -174,8 +174,8 @@
         </div>
 
         <footer>
-          <button type="submit">Adicionar Fornecedor</button>
-          <a href="/fornecedor/lst">Cancelar</a>
+          <button type="submit">Salvar Alterações</button>
+          <a href="/fornecedoradm/lst">Cancelar</a>
         </footer>
       </div>
     </form>

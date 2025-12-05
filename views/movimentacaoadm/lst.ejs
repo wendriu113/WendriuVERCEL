@@ -61,7 +61,7 @@
       <p>Histórico de movimentações de estoque</p>
     </div>
     <div class="actions">
-      <a href="/movimentacao/add" class="btn primary">Nova Movimentação</a>
+      <a href="/movimentacaoadm/add" class="btn primary">Nova Movimentação</a>
     </div>
   </div>
 
@@ -92,7 +92,7 @@
           <td><%= m.observacao || '-' %></td>
           <td class="actions-cell">
             <a
-              href="/movimentacao/edit/<%= m._id %>"
+              href="/movimentacaoadm/edit/<%= m._id %>"
               class="icon-btn edit"
               title="Editar"
             >
@@ -103,7 +103,7 @@
               </svg>
             </a>
             <form
-              action="/movimentacao/delete/<%= m._id %>"
+              action="/movimentacaoadm/delete/<%= m._id %>"
               method="post"
               style="display: inline"
             >
