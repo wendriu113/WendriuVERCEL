@@ -1,5 +1,4 @@
-import { createServer } from 'http';
-
+import { createServer } from "http";
 
 import express from "express";
 import { fileURLToPath } from "url";
@@ -549,22 +548,27 @@ app.post("/fornecedor/edit/:id", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3001;
-await conexao();
+export default app;
 
-const server = app.listen(PORT, () => {
-  console.log(`Servidor rodando em: http://localhost:${PORT}`);
-});
+// Iniciar servidor apenas se este arquivo for executado diretamente
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const PORT = process.env.PORT || 3001;
+  await conexao();
 
-server.on("error", (err) => {
-  if (err.code === "EADDRINUSE") {
-    console.error(
-      `Porta ${PORT} já está em uso. Pare o processo que está usando a porta ou escolha outra porta.`
-    );
-    process.exit(1);
-  }
-  throw err;
-});
+  const server = app.listen(PORT, () => {
+    console.log(`Servidor rodando em: http://localhost:${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(
+        `Porta ${PORT} já está em uso. Pare o processo que está usando a porta ou escolha outra porta.`
+      );
+      process.exit(1);
+    }
+    throw err;
+  });
+}
 
 // validação de CNPJ (algoritmo padrão)
 function validateCNPJ(input) {
@@ -588,4 +592,3 @@ function validateCNPJ(input) {
   const t2 = cnpj.substring(0, 13) + calc(cnpj.substring(0, 13));
   return t1 === cnpj.substring(0, 13) + cnpj[12] ? true : t2 === cnpj;
 }
-
