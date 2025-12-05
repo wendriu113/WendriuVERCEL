@@ -1,3 +1,13 @@
+/* ============================================================================
+   ARQUIVO: globais.css
+   DESCRIÇÃO: Estilos globais para o Sistema de Gerenciamento
+   ============================================================================ */
+
+/* ============================================================================
+   SEÇÃO 1: VARIÁVEIS CSS (Design System)
+   Define cores, fontes, espaçamentos e temas para toda a aplicação
+   ============================================================================ */
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -39,23 +49,43 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
-/* Ensure page content doesn't get hidden behind fixed footer */
+
+/* ============================================================================
+   SEÇÃO 2: LAYOUT PRINCIPAL - BODY E CONTAINERS
+   Define a estrutura base com flex para rodapé fixo no final
+   ============================================================================ */
+
 body {
-  padding-bottom: 6.5rem; /* adjust if you change footer height */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Footer: fixed full-bleed at bottom */
+/* Áreas principais que devem expandir para preencher o espaço disponível */
+main,
+.dashboard-main,
+.stock-container,
+.landing-container,
+.products-container {
+  flex: 1 0 auto;
+}
+
+/* ============================================================================
+   SEÇÃO 3: RODAPÉ
+   Rodapé com cor de fundo escura, posicionado no final da página
+   ============================================================================ */
+
 .footer {
   background-color: #1f2937;
   color: #d1d5db;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 40;
-  padding: 1rem 0;
+  padding: 1rem;
+  margin-top: auto;
 }
+
+/* ============================================================================
+   SEÇÃO 4: TEMA ESCURO
+   Variáveis de cores para o tema dark mode
+   ============================================================================ */
 
 .dark {
   --background: oklch(0.145 0 0);
@@ -135,6 +165,7 @@ body {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Estilos base e tipografia - Tailwind layers */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -147,9 +178,11 @@ body {
   }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
+/* ============================================================================
+   SEÇÃO 5: TIPOGRAFIA BASE
+   Define tamanhos e pesos de fonte para títulos e parágrafos
+   ============================================================================ */
+
 @layer base {
   :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
     h1 {
@@ -206,7 +239,10 @@ html {
   font-size: var(--font-size);
 }
 
-/* ===== Landing page custom styles (added from user) ===== */
+/* ============================================================================
+   SEÇÃO 6: PÁGINA DE DESTINO (LANDING PAGE)
+   Estilos específicos para a página inicial com gradiente e cards
+   ============================================================================ */
 .landing-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%);
@@ -306,9 +342,13 @@ html {
   }
 }
 
-/* End landing styles */
+/* Fim dos estilos da landing page */
 
-/* ===== Products grid styles (from user) ===== */
+/* ============================================================================
+   SEÇÃO 7: GRID DE PRODUTOS
+   Layout em grid responsivo para exibição de produtos com cards
+   ============================================================================ */
+
 .products-container {
   width: 100%;
 }
@@ -400,9 +440,13 @@ html {
   font-weight: 500;
 }
 
-/* End products styles */
+/* Fim dos estilos de produtos */
 
-/* ===== Dashboard styles (added per user) ===== */
+/* ============================================================================
+   SEÇÃO 8: PAINEL DE CONTROLE (DASHBOARD)
+   Layout do dashboard com header, navegação e área de conteúdo
+   ============================================================================ */
+
 .dashboard-container {
   min-height: 100vh;
   background-color: #f9fafb;
@@ -502,11 +546,16 @@ html {
   padding: 2rem 1rem;
 }
 
-/* End dashboard styles */
+/* Fim dos estilos do dashboard */
 
-/* ===== Stock movement styles (StockMovementManager) ===== */
+/* ============================================================================
+   SEÇÃO 9: MOVIMENTAÇÃO DE ESTOQUE
+   Estilos para cards de movimentação com ícones de entrada/saída
+   ============================================================================ */
+
 .stock-container {
   width: 100%;
+  box-sizing: border-box;
 }
 
 .stock-title {
@@ -514,31 +563,39 @@ html {
   color: #111827;
   margin-bottom: 1.5rem;
   font-weight: 700;
+  padding: 2rem 1rem 0 1rem;
 }
 
 .stock-list {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1rem 2rem 1rem;
+  margin: 0;
+  /* Lista vertical de cards sem sobreposição */
 }
 
 .stock-movement-card {
   background-color: white;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
   transition: box-shadow 0.3s;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 1rem; /* spacing between stacked cards */
+  /* Card com sombra suave, 100% da largura */
 }
 
 .stock-movement-card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* Aumento da sombra ao passar o mouse */
 }
 
 .stock-movement-content {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: stretch;
+  gap: 2rem;
+  width: 100%;
+  /* Ícone à esquerda, informações à direita */
 }
 
 .stock-icon-container {
@@ -546,114 +603,101 @@ html {
   border-radius: 9999px;
   display: flex;
   align-items: center;
-  justify-content: center; /* center svg/icons to avoid shift */
+  justify-content: center;
   min-width: 48px;
   min-height: 48px;
-}
-
-.stock-icon-container svg {
-  display: block; /* avoid inline-gap shifts */
-}
-
-/* Strong overrides to guarantee vertical stacking and full-width cards
-   These use conservative !important flags only to counteract any conflicting
-   rules from other stylesheets or inline styles. Remove !important later if
-   you find the original conflicting rule and prefer a cleaner fix. */
-.stock-list {
-  display: block !important;
-  padding: 0 !important;
-}
-.stock-list .stock-movement-card {
-  display: block !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  margin: 0 0 1rem 0 !important;
-  clear: both !important;
-  transform: none !important;
-}
-.stock-movement-card .stock-movement-content {
-  width: 100% !important;
-}
-.stock-icon-container {
-  flex: 0 0 auto !important; /* avoid icon column stretching/shrinking */
-}
-
-/* Defensive: ensure no floats are causing offsets */
-.stock-list::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.stock-icon-container.entrada {
-  background-color: #dcfce7;
-}
-
-.stock-icon-container.saida {
-  background-color: #fee2e2;
-}
-
-.stock-icon.entrada {
-  color: #16a34a;
-}
-
-.stock-icon.saida {
-  color: #dc2626;
-}
-
-.stock-movement-info {
-  flex: 1;
+  flex: 0 0 48px;
+  /* Ícone redondo fixo de 48px */
 }
 
 .stock-movement-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-bottom: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .stock-badge {
-  padding: 0.25rem 0.75rem;
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
   border-radius: 9999px;
-  color: white;
   font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  /* Badge colorido indicando tipo de movimentação */
 }
 
 .stock-badge.entrada {
-  background-color: #22c55e;
+  background-color: #16a34a;
+  /* Verde para entrada de estoque */
 }
 
 .stock-badge.saida {
-  background-color: #ef4444;
+  background-color: #dc2626;
+  /* Vermelho para saída de estoque */
 }
 
 .stock-quantity {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  /* Quantidade em destaque */
+}
+
+/* ---- Cores específicas para ícones e containers ---- */
+
+.stock-icon-container.entrada {
+  background-color: #dcfce7;
+  /* Verde claro para entrada */
+}
+
+.stock-icon-container.saida {
+  background-color: #fee2e2;
+  /* Vermelho claro para saída */
+}
+
+.stock-icon.entrada {
+  color: #16a34a;
+  /* Ícone verde */
+}
+
+.stock-icon.saida {
+  color: #dc2626;
+  /* Ícone vermelho */
+}
+
+.stock-movement-info {
+  flex: 1;
   color: #111827;
   font-weight: 500;
+  min-width: 0;
+  /* Seção com informações da movimentação */
 }
 
 .stock-details-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
   color: #4b5563;
-}
-
-@media (min-width: 768px) {
-  .stock-details-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  margin-top: 0.75rem;
+  width: 100%;
 }
 
 .stock-detail-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  /* Cada item de detalhe (data, produto, usuário, observação) */
 }
 
-/* End stock movement styles */
+/* Fim dos estilos de movimentação de estoque */
 
-/* ===== Header styles (from provided Header.css) ===== */
+/* ============================================================================
+   SEÇÃO 10: CABEÇALHO
+   Header sticky no topo com logo, título e botão de navegação
+   ============================================================================ */
+
 .header {
   background-color: white;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
@@ -661,6 +705,191 @@ html {
   position: sticky;
   top: 0;
   z-index: 50;
+  /* Fica fixo no topo ao rolar */
+}
+
+.header-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  /* Logo com ícone e título lado a lado */
+}
+
+.header-logo-icon {
+  background-color: #4f46e5;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  /* Ícone com fundo azul/roxo */
+}
+
+.header-title {
+  font-size: 1.5rem;
+  color: #111827;
+  font-weight: 600;
+  margin: 0;
+  /* Título grande e em negrito */
+}
+
+.header-back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #4b5563;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  /* Botão flutuante para voltar à home */
+}
+
+.header-back-button:hover {
+  color: #4f46e5;
+  background-color: #f3f4f6;
+  /* Efeito hover com cor e fundo suave */
+}
+
+@media (max-width: 640px) {
+  .header-title {
+    font-size: 1.125rem;
+    /* Título menor em telas pequenas */
+  }
+
+  .header-back-button span {
+    display: none;
+    /* Esconde texto do botão em mobile */
+  }
+}
+
+/* Fim dos estilos do cabeçalho */
+
+/* ============================================================================
+   SEÇÃO 11: RODAPÉ COMPLETO
+   Footer com informações em grid responsivo
+   ============================================================================ */
+
+/* Estilos do conteúdo do footer */
+.footer-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0.5rem;
+  /* Grid do footer com responsividade */
+}
+
+@media (min-width: 640px) {
+  .footer-content {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 colunas em tablets */
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-content {
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 colunas em desktop */
+  }
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  /* Cada seção do footer em coluna */
+}
+
+.footer-title {
+  font-size: 1rem;
+  color: white;
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+  /* Título da seção do footer */
+}
+
+.footer-description {
+  margin: 0;
+  line-height: 1.4;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  /* Descrição da empresa/sistema */
+}
+
+.footer-heading {
+  font-size: 0.875rem;
+  color: white;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  /* Subtítulo das seções */
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  /* Lista de links do footer */
+}
+
+.footer-list li {
+  color: #9ca3af;
+  transition: color 0.3s;
+  cursor: pointer;
+  font-size: 0.875rem;
+  /* Item da lista com hover suave */
+}
+
+.footer-list li:hover {
+  color: #4f46e5;
+}
+
+.footer-bottom {
+  border-top: 1px solid #374151;
+  padding: 0.5rem 1rem;
+}
+
+.footer-copyright {
+  max-width: 80rem;
+  margin: 0 auto;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  /* Copyright e direitos reservados */
+}
+
+/* Fim dos estilos do rodapé */
+
+/* ============================================================================
+   FIM DO CSS - TODOS OS ESTILOS FORAM ORGANIZADOS E COMENTADOS
+   Arquivo completo com 11 seções principais documentadas
+   ============================================================================ */
+
+/* Nota: Há duplicação de estilos de header abaixo que podem ser removidas */
+.header {
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* Header duplicado - pode ser removido */
 }
 
 .header-content {
@@ -685,7 +914,6 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
 }
 
 .header-title {
@@ -723,277 +951,43 @@ html {
   }
 }
 
-/* ===== Footer styles (from provided Footer.css) ===== */
-.footer {
-  background-color: #1f2937;
-  color: #d1d5db;
-  margin-top: auto;
-}
+/* Fim da duplicação de header */
 
-.footer-content {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 3rem 1rem;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-}
-
-@media (min-width: 640px) {
-  .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .footer-content {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.footer-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer-title {
-  font-size: 1.25rem;
-  color: white;
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
-}
-
-.footer-description {
-  margin: 0;
-  line-height: 1.6;
-  color: #9ca3af;
-}
-
-.footer-heading {
-  font-size: 1rem;
-  color: white;
-  margin: 0 0 1rem 0;
-  font-weight: 600;
-}
-
-.footer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.footer-list li {
-  color: #9ca3af;
-  transition: color 0.3s;
-  cursor: pointer;
-}
-
-.footer-list li:hover {
-  color: #4f46e5;
-}
-
-.footer-bottom {
-  border-top: 1px solid #374151;
-  padding: 1.5rem 1rem;
-}
-
-.footer-copyright {
-  max-width: 80rem;
-  margin: 0 auto;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.875rem;
-}
-
-/* End header/footer styles */
-.header {
-  background-color: white;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.header-content {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.header-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.header-logo-icon {
-  background-color: #4f46e5;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-title {
-  font-size: 1.5rem;
-  color: #111827;
-  font-weight: 600;
-  margin: 0;
-}
-
-.header-back-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #4b5563;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-}
-
-.header-back-button:hover {
-  color: #4f46e5;
-  background-color: #f3f4f6;
-}
-
-@media (max-width: 640px) {
-  .header-title {
-    font-size: 1.125rem;
-  }
-
-  .header-back-button span {
-    display: none;
-  }
-}
-/* End header styles */
-.footer {
-  background-color: #1f2937;
-  color: #d1d5db;
-  margin-top: auto;
-}
-
-.footer-content {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 1rem 1rem;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .footer-content {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.footer-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer-title {
-  font-size: 1.25rem;
-  color: white;
-  margin: 0 0 0.5rem 0;
-  font-weight: 600;
-}
-
-.footer-description {
-  margin: 0;
-  line-height: 1.6;
-  color: #9ca3af;
-}
-
-.footer-heading {
-  font-size: 1rem;
-  color: white;
-  margin: 0 0 1rem 0;
-  font-weight: 600;
-}
-
-.footer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.footer-list li {
-  color: #9ca3af;
-  transition: color 0.3s;
-  cursor: pointer;
-}
-
-.footer-list li:hover {
-  color: #4f46e5;
-}
-
-.footer-bottom {
-  border-top: 1px solid #374151;
-  padding: 1.5rem 1rem;
-}
-
-.footer-copyright {
-  max-width: 80rem;
-  margin: 0 auto;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.875rem;
-}
-/* End footer styles */
-
-/* === Footer fixed overrides (ensure footer doesn't overlap content) ===
-   This block enforces a fixed footer and a large enough body padding to
-   prevent content from rendering underneath it. Keep this as the last
-   footer-related rules so duplicates earlier in the file are overridden.
-*/
-body {
-  padding-bottom: 12rem !important; /* reserve space for the fixed footer */
-}
-
-.footer {
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  z-index: 60 !important;
-  padding: 1rem 0 !important;
-  box-sizing: border-box !important;
-}
-
-.footer-content {
-  padding: 1rem 1rem !important;
-}
-
-/* small visual separation so content doesn't visually run into footer */
-.footer::before {
-  content: "";
-  display: block;
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.08);
-}
+/* ============================================================================
+   RESUMO FINAL DO ARQUIVO
+   ============================================================================
+   
+   SEÇÃO 1: VARIÁVEIS CSS (linhas 1-115)
+   - Cores, tipografia, espaçamentos e tema dark
+   
+   SEÇÃO 2: LAYOUT PRINCIPAL (linhas 116-140)
+   - Body em flex, containers expandindo
+   
+   SEÇÃO 3: RODAPÉ BASE (linhas 141-147)
+   - Rodapé com cor escura e margem superior automática
+   
+   SEÇÃO 4: TEMA ESCURO (linhas 148-166)
+   - Variáveis de cores para dark mode
+   
+   SEÇÃO 5: TIPOGRAFIA (linhas 167-232)
+   - Estilos base para h1-h4, p, label, button, input
+   
+   SEÇÃO 6: LANDING PAGE (linhas 233-334)
+   - Página inicial com gradiente, botões, cards de features
+   
+   SEÇÃO 7: GRID DE PRODUTOS (linhas 335-419)
+   - Cards de produtos com imagem, nome e detalhes
+   
+   SEÇÃO 8: DASHBOARD (linhas 420-536)
+   - Header, navegação com abas, área de conteúdo
+   
+   SEÇÃO 9: MOVIMENTAÇÃO DE ESTOQUE (linhas 537-693)
+   - Cards com ícones, badges coloridas, grid de detalhes
+   
+   SEÇÃO 10: CABEÇALHO (linhas 694-795)
+   - Header sticky, logo, título, botão voltar
+   
+   SEÇÃO 11: RODAPÉ COMPLETO (linhas 796-875)
+   - Footer grid responsivo, seções, links, copyright
+   
+   ============================================================================ */
