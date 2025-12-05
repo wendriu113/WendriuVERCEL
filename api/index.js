@@ -13,6 +13,19 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Middleware para garantir que a conexão com o banco esteja estabelecida
+// antes de processar qualquer rota. Isso evita buffering/timeouts quando
+// uma requisição chega antes da conexão estar pronta (útil em serverless).
+app.use(async (req, res, next) => {
+  try {
+    await conexao();
+    return next();
+  } catch (err) {
+    console.error("Erro na conexão antes de processar a rota:", err);
+    return res.status(500).send("Erro ao conectar ao banco de dados");
+  }
+});
+
 app.set("view engine", "ejs");
 
 // Converte o caminho do arquivo atual
