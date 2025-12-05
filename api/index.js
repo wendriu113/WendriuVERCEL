@@ -10,8 +10,10 @@ import Produto from "../models/Produto.js";
 import Movimentacao from "../models/Movimentacao.js";
 
 const app = express();
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.set("view engine", "ejs");
 
 // Middleware para garantir que a conexão com o banco esteja estabelecida
 // antes de processar qualquer rota. Isso evita buffering/timeouts quando
@@ -25,8 +27,6 @@ app.use(async (req, res, next) => {
     return res.status(500).send("Erro ao conectar ao banco de dados");
   }
 });
-
-app.set("view engine", "ejs");
 
 // Converte o caminho do arquivo atual
 const __filename = fileURLToPath(import.meta.url);
@@ -477,69 +477,121 @@ app.get("/movimentacaoadm/edit/:id", async (req, res) => {
 // Rota POST para salvar edição da movimentação
 app.post("/movimentacaoadm/edit/:id", async (req, res) => {
   try {
+    console.log("[MOVIMENTACAO EDIT] received", {
+      params: req.params,
+      body: req.body,
+    });
+
     const movimentacao = await Movimentacao.findById(req.params.id);
-    if (!movimentacao) {
-      throw new Error("Movimentação não encontrada");
+    console.log(
+      "[MOVIMENTACAO EDIT] loaded movimentacao id:",
+      movimentacao ? movimentacao._id : null
+    );
+    if (!movimentacao) throw new Error("Movimentação não encontrada");
+
+    // Busca produto atual (da movimentação). Se estiver ausente no documento,
+    // tenta recuperar usando o produto enviado no formulário.
+    let produtoAtual = null;
+    const originalProdutoId = movimentacao.produto;
+    if (originalProdutoId) {
+      produtoAtual = await Produto.findById(originalProdutoId);
+    }
+    console.log(
+      "[MOVIMENTACAO EDIT] produtoAtual (do documento):",
+      produtoAtual
+        ? { id: produtoAtual._id, quantidade: produtoAtual.quantidade }
+        : null
+    );
+
+    // Tenta buscar o novo produto vindo do form
+    let produtoNovo = null;
+    if (req.body && req.body.produto) {
+      produtoNovo = await Produto.findById(req.body.produto);
+    }
+    console.log(
+      "[MOVIMENTACAO EDIT] produtoNovo (do form):",
+      produtoNovo
+        ? { id: produtoNovo._id, quantidade: produtoNovo.quantidade }
+        : null
+    );
+
+    // Se não existe produtoAtual no documento, mas o form trouxe um produto válido,
+    // assumimos que não há quantidade anterior a ser revertida (registro inconsistente).
+    const hasOriginalProduto = !!produtoAtual;
+    if (!produtoAtual && produtoNovo) {
+      console.warn(
+        "[MOVIMENTACAO EDIT] produtoAtual ausente no documento; assume produtoNovo como atual (sem revert)"
+      );
+      produtoAtual = produtoNovo;
     }
 
-    // Busca produto atual e novo produto
-    const produtoAtual = await Produto.findById(movimentacao.produto);
-    const produtoNovo = await Produto.findById(req.body.produto);
+    if (!produtoAtual)
+      throw new Error("Produto atual (da movimentação) não encontrado");
 
-    if (!produtoAtual || !produtoNovo) {
-      throw new Error("Produto não encontrado");
-    }
-
-    // Reverte quantidade da movimentação anterior
-    if (movimentacao.tipo === "entrada") {
-      produtoAtual.quantidade -= movimentacao.quantidade;
+    // Reverte quantidade da movimentação anterior apenas se havia produto original
+    if (hasOriginalProduto) {
+      if (movimentacao.tipo === "entrada")
+        produtoAtual.quantidade -= movimentacao.quantidade;
+      else produtoAtual.quantidade += movimentacao.quantidade;
+      await produtoAtual.save();
+      console.log(
+        "[MOVIMENTACAO EDIT] produtoAtual depois do revert:",
+        produtoAtual.quantidade
+      );
     } else {
-      produtoAtual.quantidade += movimentacao.quantidade;
+      console.log(
+        "[MOVIMENTACAO EDIT] pulando revert (nenhum produto original encontrado)"
+      );
     }
-    await produtoAtual.save();
 
     // Se mudou de produto, atualiza o novo
     if (produtoNovo._id.toString() !== produtoAtual._id.toString()) {
-      // Aplica quantidade no novo produto
-      if (req.body.tipo === "entrada") {
+      if (req.body.tipo === "entrada")
         produtoNovo.quantidade += Number(req.body.quantidade);
-      } else {
-        if (produtoNovo.quantidade < Number(req.body.quantidade)) {
+      else {
+        if (produtoNovo.quantidade < Number(req.body.quantidade))
           throw new Error("Quantidade insuficiente em estoque");
-        }
         produtoNovo.quantidade -= Number(req.body.quantidade);
       }
       await produtoNovo.save();
+      console.log(
+        "[MOVIMENTACAO EDIT] produtoNovo salvo, quantidade:",
+        produtoNovo.quantidade
+      );
     } else {
       // Mesmo produto, apenas atualiza quantidade
-      if (req.body.tipo === "entrada") {
+      if (req.body.tipo === "entrada")
         produtoAtual.quantidade += Number(req.body.quantidade);
-      } else {
-        if (produtoAtual.quantidade < Number(req.body.quantidade)) {
+      else {
+        if (produtoAtual.quantidade < Number(req.body.quantidade))
           throw new Error("Quantidade insuficiente em estoque");
-        }
         produtoAtual.quantidade -= Number(req.body.quantidade);
       }
       await produtoAtual.save();
+      console.log(
+        "[MOVIMENTACAO EDIT] produtoAtual atualizado, quantidade:",
+        produtoAtual.quantidade
+      );
     }
 
     // Atualiza movimentação
     movimentacao.tipo = req.body.tipo;
-    movimentacao.produto = req.body.produto;
+    movimentacao.produto = req.body.produto || movimentacao.produto;
     movimentacao.quantidade = Number(req.body.quantidade);
-    movimentacao.usuario = req.body.usuario; // Adiciona atualização do usuário
+    movimentacao.usuario = req.body.usuario || movimentacao.usuario;
     movimentacao.observacao = req.body.observacao;
     await movimentacao.save();
+    console.log("[MOVIMENTACAO EDIT] movimentacao salva id:", movimentacao._id);
 
-    res.redirect("/movimentacaoadm/lst");
+    return res.redirect("/movimentacaoadm/lst");
   } catch (err) {
     console.error("Erro ao atualizar movimentação:", err);
     const produtos = await Produto.find().lean();
-    const usuarios = await Usuario.find().select("-senha").lean(); // Adiciona busca de usuários
-    res.render("movimentacaoadm/edit", {
+    const usuarios = await Usuario.find().select("-senha").lean();
+    return res.render("movimentacaoadm/edit", {
       formData: { ...req.body, _id: req.params.id },
       produtos,
-      usuarios, // Passa usuários para o template
+      usuarios,
       error: "Erro ao atualizar movimentação",
       showAlert: true,
       alertMessage: err.message,
