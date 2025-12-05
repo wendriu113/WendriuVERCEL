@@ -20,22 +20,32 @@
           onerror="this.onerror=null;this.src='/images/placeholder.svg'"
         />
         <% } else { %>
-        <div style="font-size: 28px">📦</div>
+        <div class="product-placeholder">📦</div>
         <% } %>
       </div>
       <div class="product-content">
         <h3 class="product-name"><%= prod.nome %></h3>
         <p class="product-description"><%= prod.descricao || '' %></p>
+
         <div class="product-details">
           <div class="product-detail-row">
-            Preço: R$ <%= (prod.preco||0).toFixed(2) %>
+            <span class="product-detail-label">Preço:</span>
+            <span class="product-detail-value"
+              >R$ <strong><%= (prod.preco||0).toFixed(2) %></strong></span
+            >
           </div>
           <div class="product-detail-row">
-            Quantidade: <%= prod.quantidade || 0 %>
+            <span class="product-detail-label">Quantidade:</span>
+            <span class="product-detail-value"
+              ><%= prod.quantidade || 0 %></span
+            >
           </div>
           <div class="product-detail-row">
-            Fornecedor: <%= (prod.fornecedor && prod.fornecedor.nome) ?
-            prod.fornecedor.nome : (prod.fornecedor || '-') %>
+            <span class="product-detail-label">Fornecedor:</span>
+            <span class="product-detail-value"
+              ><%= (prod.fornecedor && prod.fornecedor.nome) ?
+              prod.fornecedor.nome : (prod.fornecedor || '-') %></span
+            >
           </div>
         </div>
       </div>

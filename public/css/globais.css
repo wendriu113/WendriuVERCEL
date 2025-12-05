@@ -545,20 +545,21 @@ html {
 }
 
 .product-card {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.08);
   overflow: hidden;
-  transition: box-shadow 0.3s;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .product-card:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 18px 40px rgba(16, 24, 40, 0.12);
+  transform: translateY(-6px);
 }
 
 .product-image-container {
-  /* reduzido para tornar o card mais compacto */
-  height: 9rem;
+  /* imagem maior para destaque */
+  height: 12rem;
   overflow: hidden;
   background-color: #f3f4f6;
 }
@@ -570,7 +571,7 @@ html {
 }
 
 .product-content {
-  padding: 1rem;
+  padding: 1rem 1.1rem 1.25rem 1.1rem;
 }
 
 .product-name {
@@ -590,20 +591,83 @@ html {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-top: 0.4rem;
 }
 
 .product-detail-row {
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .product-detail-label {
-  color: #4b5563;
+  color: #6b7280;
+  font-size: 0.95rem;
 }
 
 .product-detail-value {
   color: #111827;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+.product-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 40px;
+  color: #9ca3af;
+}
+
+/* Layout horizontal em telas médias */
+@media (min-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .product-image-container {
+    width: 42%;
+    height: auto;
+    min-height: 160px;
+    flex: 0 0 42%;
+  }
+
+  .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-content {
+    width: 58%;
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-description {
+    max-height: 3.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.6rem;
+  }
+}
+
+/* Responsividade: cards maiores em telas grandes */
+@media (min-width: 1024px) {
+  .product-image-container {
+    height: 14rem;
+  }
 }
 
 /* Fim dos estilos de produtos */
