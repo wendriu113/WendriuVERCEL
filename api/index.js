@@ -44,16 +44,33 @@ app.get("/", (req, res) => {
 
 // Página pública de produtos (site)
 app.get("/site/produtosite", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const produtos = await Produto.find()
-      .populate("fornecedor")
-      .sort({ nome: 1 })
-      .lean();
-    res.render("site/produtosite", { produtos });
+    let produtos;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      const fornecedoresMatch = await Fornecedor.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const fornecedorIds = fornecedoresMatch.map((f) => f._id);
+      const or = [{ nome: regex }, { descricao: regex }];
+      if (fornecedorIds.length) or.push({ fornecedor: { $in: fornecedorIds } });
+      produtos = await Produto.find({ $or: or })
+        .populate("fornecedor")
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      produtos = await Produto.find()
+        .populate("fornecedor")
+        .sort({ nome: 1 })
+        .lean();
+    }
+    res.render("site/produtosite", { produtos, q });
   } catch (err) {
     console.error("Erro ao carregar produtos do site:", err);
     res.status(500).render("site/produtosite", {
       produtos: [],
+      q,
       showAlert: true,
       alertMessage: "Erro ao carregar produtos: " + err.message,
     });
@@ -67,13 +84,23 @@ app.get("/produtosite", (req, res) => {
 
 // Página pública de fornecedores (site)
 app.get("/site/fornecedorsite", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
-    res.render("site/fornecedorsite", { fornecedores });
+    let fornecedores;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      fornecedores = await Fornecedor.find({ nome: regex })
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
+    }
+    res.render("site/fornecedorsite", { fornecedores, q });
   } catch (err) {
     console.error("Erro ao carregar fornecedores do site:", err);
     res.status(500).render("site/fornecedorsite", {
       fornecedores: [],
+      q,
       showAlert: true,
       alertMessage: "Erro ao carregar fornecedores: " + err.message,
     });
@@ -87,17 +114,40 @@ app.get("/fornecedorsite", (req, res) =>
 
 // Página pública de movimentações (site)
 app.get("/site/movimentacaosite", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const movimentacoes = await Movimentacao.find()
-      .populate("produto")
-      .populate("usuario")
-      .sort({ data: -1 })
-      .lean();
-    res.render("site/movimentacaosite", { movimentacoes });
+    let movimentacoes;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      const produtosMatch = await Produto.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const produtoIds = produtosMatch.map((p) => p._id);
+      const usuariosMatch = await Usuario.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const usuarioIds = usuariosMatch.map((u) => u._id);
+      const or = [{ observacao: regex }];
+      if (produtoIds.length) or.push({ produto: { $in: produtoIds } });
+      if (usuarioIds.length) or.push({ usuario: { $in: usuarioIds } });
+      movimentacoes = await Movimentacao.find({ $or: or })
+        .populate("produto")
+        .populate("usuario")
+        .sort({ data: -1 })
+        .lean();
+    } else {
+      movimentacoes = await Movimentacao.find()
+        .populate("produto")
+        .populate("usuario")
+        .sort({ data: -1 })
+        .lean();
+    }
+    res.render("site/movimentacaosite", { movimentacoes, q });
   } catch (err) {
     console.error("Erro ao carregar movimentações do site:", err);
     res.status(500).render("site/movimentacaosite", {
       movimentacoes: [],
+      q,
       showAlert: true,
       alertMessage: "Erro ao carregar movimentações: " + err.message,
     });
@@ -111,16 +161,24 @@ app.get("/movimentacaosite", (req, res) =>
 
 // Página pública de usuários (site)
 app.get("/site/usuariosite", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const usuarios = await Usuario.find()
-      .select("-senha")
-      .sort({ nome: 1 })
-      .lean();
-    res.render("site/usuariosite", { usuarios });
+    let usuarios;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      usuarios = await Usuario.find({ nome: regex })
+        .select("-senha")
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      usuarios = await Usuario.find().select("-senha").sort({ nome: 1 }).lean();
+    }
+    res.render("site/usuariosite", { usuarios, q });
   } catch (err) {
     console.error("Erro ao carregar usuários do site:", err);
     res.status(500).render("site/usuariosite", {
       usuarios: [],
+      q,
       showAlert: true,
       alertMessage: "Erro ao carregar usuários: " + err.message,
     });
@@ -132,16 +190,33 @@ app.get("/usuariosite", (req, res) => res.redirect(301, "/site/usuariosite"));
 
 // Rotas Produto
 app.get("/produtoadm/lst", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const produtos = await Produto.find()
-      .populate("fornecedor")
-      .sort({ nome: 1 })
-      .lean();
-    res.render("produtoadm/lst", { produtos });
+    let produtos;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      const fornecedoresMatch = await Fornecedor.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const fornecedorIds = fornecedoresMatch.map((f) => f._id);
+      const or = [{ nome: regex }, { descricao: regex }];
+      if (fornecedorIds.length) or.push({ fornecedor: { $in: fornecedorIds } });
+      produtos = await Produto.find({ $or: or })
+        .populate("fornecedor")
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      produtos = await Produto.find()
+        .populate("fornecedor")
+        .sort({ nome: 1 })
+        .lean();
+    }
+    res.render("produtoadm/lst", { produtos, q });
   } catch (err) {
     console.error("Erro ao listar produtos:", err);
     res.render("produtoadm/lst", {
       produtos: [],
+      q,
       error: "Erro ao listar produtos",
       showAlert: true,
       alertMessage: "Erro ao carregar lista de produtos: " + err.message,
@@ -268,18 +343,41 @@ app.post("/produtoadm/edit/:id", async (req, res) => {
 
 // Rotas Movimentação
 app.get("/movimentacaoadm/lst", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const movimentacoes = await Movimentacao.find()
-      .populate("produto")
-      .populate("usuario")
-      .sort({ data: -1 })
-      .lean();
+    let movimentacoes;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      const produtosMatch = await Produto.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const produtoIds = produtosMatch.map((p) => p._id);
+      const usuariosMatch = await Usuario.find({ nome: regex })
+        .select("_id")
+        .lean();
+      const usuarioIds = usuariosMatch.map((u) => u._id);
+      const or = [{ observacao: regex }];
+      if (produtoIds.length) or.push({ produto: { $in: produtoIds } });
+      if (usuarioIds.length) or.push({ usuario: { $in: usuarioIds } });
+      movimentacoes = await Movimentacao.find({ $or: or })
+        .populate("produto")
+        .populate("usuario")
+        .sort({ data: -1 })
+        .lean();
+    } else {
+      movimentacoes = await Movimentacao.find()
+        .populate("produto")
+        .populate("usuario")
+        .sort({ data: -1 })
+        .lean();
+    }
 
-    res.render("movimentacaoadm/lst", { movimentacoes });
+    res.render("movimentacaoadm/lst", { movimentacoes, q });
   } catch (err) {
     console.error("Erro ao listar movimentações:", err);
     res.render("movimentacaoadm/lst", {
       movimentacoes: [],
+      q,
       error: "Erro ao listar movimentações",
     });
   }
@@ -451,19 +549,29 @@ app.post("/movimentacaoadm/edit/:id", async (req, res) => {
 
 // Rotas Usuário
 app.get("/usuarioadm/lst", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const usuarios = await Usuario.find()
-      .select("-senha")
-      .sort({ nome: 1 })
-      .lean();
-    res.render("usuarioadm/lst", { usuarios });
+    let usuarios;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      usuarios = await Usuario.find({
+        $or: [{ nome: regex }, { email: regex }],
+      })
+        .select("-senha")
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      usuarios = await Usuario.find().select("-senha").sort({ nome: 1 }).lean();
+    }
+    res.render("usuarioadm/lst", { usuarios, q });
   } catch (err) {
     console.error("Erro ao listar usuários:", err);
     res.render("usuarioadm/lst", {
       usuarios: [],
+      q,
       error: "Erro ao listar usuários",
       showAlert: true,
-      alertMessage: err.message,
+      alertMessage: "Erro ao carregar lista de usuários: " + err.message,
     });
   }
 });
@@ -559,13 +667,25 @@ app.post("/usuarioadm/edit/:id", async (req, res) => {
 
 // Rotas Fornecedor
 app.get("/fornecedoradm/lst", async (req, res) => {
+  const q = (req.query.q || "").trim();
   try {
-    const fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
-    res.render("fornecedoradm/lst", { fornecedores });
+    let fornecedores;
+    if (q) {
+      const regex = new RegExp(q, "i");
+      fornecedores = await Fornecedor.find({
+        $or: [{ nome: regex }, { cnpj: regex }],
+      })
+        .sort({ nome: 1 })
+        .lean();
+    } else {
+      fornecedores = await Fornecedor.find().sort({ nome: 1 }).lean();
+    }
+    res.render("fornecedoradm/lst", { fornecedores, q });
   } catch (err) {
     console.error("Erro ao listar fornecedores:", err);
     res.render("fornecedoradm/lst", {
       fornecedores: [],
+      q,
       error: "Erro ao listar fornecedores",
     });
   }

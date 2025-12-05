@@ -70,8 +70,51 @@
       <h2>Fornecedores</h2>
       <p>Lista de fornecedores</p>
     </div>
-    <div class="actions">
-      <a href="/fornecedoradm/add" class="btn primary">Adicionar Fornecedor</a>
+    <div style="display: flex; align-items: center; gap: 12px">
+      <form
+        class="search-container"
+        method="get"
+        action="/fornecedoradm/lst"
+        style="margin-right: 8px"
+      >
+        <input
+          type="search"
+          name="q"
+          class="search-input"
+          placeholder="Pesquisar..."
+          value="<%= typeof q !== 'undefined' ? q : '' %>"
+        />
+        <button type="submit" class="search-btn" aria-label="Buscar">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              d="M21 21l-4.35-4.35"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle
+              cx="11"
+              cy="11"
+              r="6"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </form>
+      <div class="actions">
+        <a href="/fornecedoradm/add" class="btn primary"
+          >Adicionar Fornecedor</a
+        >
+      </div>
     </div>
   </div>
 

@@ -221,6 +221,172 @@ main,
       line-height: 1.5;
     }
 
+    /* ==========================================================================
+     SEÇÃO: BUSCA (Header)
+     Pequenos estilos para o formulário de busca exibido no header do site.
+     ========================================================================== */
+
+    .site-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .site-search-input {
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--input-background, #f3f3f5);
+      color: var(--color-foreground, #111827);
+      font-size: 0.95rem;
+      min-width: 180px;
+    }
+
+    .site-search-btn {
+      padding: 0.36rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--primary, #030213);
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+      .site-search-input {
+        min-width: 120px;
+      }
+      .site-search {
+        margin-left: 0.5rem;
+      }
+    }
+
+    /* ==========================================================================
+       SEÇÃO: HEADER (estilos do header do site)
+       Estilização do header principal e posicionamento do formulário de busca
+       ========================================================================== */
+
+    .header {
+      background: var(--color-card, white);
+      border-bottom: 1px solid var(--color-border, rgba(0, 0, 0, 0.06));
+    }
+
+    .header-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+
+    /* tornar relativo para posicionamento absoluto do botão */
+    .header-content {
+      position: relative;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--color-foreground, #111827);
+      font-weight: 600;
+    }
+
+    .header-back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.36rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--color-foreground, #111827);
+      cursor: pointer;
+      position: absolute;
+      right: 1rem;
+      top: 0.6rem;
+    }
+
+    /* Ajuste visual quando o botão estiver absoluto (evita sobreposição do título) */
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .site-search {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+    }
+
+    .site-search-input {
+      padding: 0.5rem 0.75rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: var(--input-background, #f8fafc);
+      color: var(--color-foreground, #0f172a);
+      font-size: 0.95rem;
+      min-width: 220px;
+      box-shadow: none;
+      transition: box-shadow 150ms ease, border-color 150ms ease;
+    }
+
+    .site-search-input:focus {
+      outline: none;
+      box-shadow: 0 4px 12px rgba(16, 24, 40, 0.06);
+      border-color: rgba(99, 102, 241, 0.9);
+    }
+
+    .site-search-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      background: var(--primary, #4f46e5);
+      color: white;
+      font-size: 0.95rem;
+    }
+
+    .site-search-btn svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .header-content {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .site-search {
+        width: 100%;
+        margin-left: 0;
+      }
+      .site-search-input {
+        width: 100%;
+        min-width: 0;
+      }
+      .site-search-btn {
+        flex-shrink: 0;
+      }
+    }
+
     button {
       font-size: var(--text-base);
       font-weight: var(--font-weight-medium);
@@ -794,9 +960,81 @@ html {
 }
 
 @media (min-width: 640px) {
+  .header-content {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
   .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-    /* 2 colunas em tablets */
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas em tablets */
+  }
+  .header-title {
+    font-size: 1.15rem;
+  }
+  .header-back-button {
+    top: 0.5rem;
+    right: 0.6rem;
+    padding: 0.3rem 0.45rem;
+  }
+}
+
+/* ==========================================================================
+   SEÇÃO: BUSCA - Estilos fornecidos pelo usuário
+   Barra de busca estilizada (container, input e botão arredondado)
+   ========================================================================== */
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 50px;
+  padding: 6px 12px;
+  gap: 10px;
+  width: 320px;
+  border: 1.5px solid #d5d5d5;
+  transition: 0.3s ease-in-out;
+}
+
+.search-container:hover {
+  border-color: #8a4fff;
+  box-shadow: 0 0 10px rgba(138, 79, 255, 0.25);
+}
+
+.search-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 15px;
+  padding: 8px;
+  background: transparent;
+}
+
+.search-btn {
+  background: #8a4fff;
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  background: #6a2fff;
+  transform: scale(1.05);
+}
+
+.search-btn i,
+.search-btn svg {
+  font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  .search-container {
+    width: 100%;
+    max-width: 420px;
   }
 }
 
